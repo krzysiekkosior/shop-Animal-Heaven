@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block header %}
+    {{ header }}
+{% endblock %}
+
+{% block content %}
+    <ul class="list-group">
+        {% for product in products %}
+            <li class="list-group-item">
+                <a href="/product/{{ product.id }}/">{{ product.name }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

@@ -21,4 +21,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
     path('', shop.MainPageView.as_view(), name='main'),
+    path('categories/', shop.CategoriesListView.as_view(), name='cat_list'),
+    path('category/<int:cat_id>/', shop.CategoryDetailsView.as_view()),
+
 ]

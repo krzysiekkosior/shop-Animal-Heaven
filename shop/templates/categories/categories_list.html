@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block header %}
+    {{ header }}
+    {% if perms.shop_app.add_category %}
+        <a href="/category/add/"><button type="button" class="btn btn-success btn-sm">Dodaj</button></a>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <ul class="list-group">
+        {% for category in categories %}
+            <li class="list-group-item d-flex">
+                <a href="/category/{{ category.id }}/" class="mr-auto p-2">{{ category.name }}</a>
+                {% if perms.shop_app.change_category and perms.shop_app.delete_category %}
+                    <a href="/category/edit/{{ category.id }}/"><button type="button" class="btn btn-info btn-sm p-2">Edytuj</button></a>
+                    <a href="/category/delete/{{ category.id }}/"><button type="button" class="btn btn-danger btn-sm p-2">Usuń</button></a>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+    <br>
+
+{% endblock %}
