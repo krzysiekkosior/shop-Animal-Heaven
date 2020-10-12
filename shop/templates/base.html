@@ -10,7 +10,7 @@
         <link href="{% static 'css/style.css' %}" rel="stylesheet">
   </head>
   <body>
-    <nav class="navbar navbar-dark sticky-top bg-success flex-md-nowrap p-0 shadow">
+    <nav class="navbar navbar-dark sticky-top mycolor flex-md-nowrap p-0 shadow">
   <a class="navbar-brand col-md-3 col-lg-2 mr-0 px-3" href="#">Animal Heaven</a>
   <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-toggle="collapse" data-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
@@ -41,56 +41,72 @@
         {% endif %}
 </nav>
 
-<div class="container-fluid">
-  <div class="row">
-    <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
-      <div class="sidebar-sticky pt-3">
-        <ul class="nav flex-column">
-          <li class="nav-item">
-            <a class="nav-link active" href="#">
-              Strona główna
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              Kategorie
-            </a>
-            <ul>
+    <div class="container-fluid">
+      <div class="row">
+        <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+          <div class="sidebar-sticky pt-3">
+            <ul class="nav flex-column">
               <li class="nav-item">
-              Produkty
-            </a>
-          </li>
+                <a class="nav-link active" href="#">
+                    <span data-feather="home"></span>
+                  Strona główna
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">
+                    <span data-feather="book-open"></span>
+                  Kategorie
+                </a>
+                <ul>
+                  <li class="nav-item">
+                  <a class="nav-link" href="#">
+                  Produkty
+                </a>
+              </li>
+                </ul>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">
+                  <span data-feather="shopping-cart"></span>
+                  Koszyk (widoczny po zalogowaniu)
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">
+                <span data-feather="layers"></span>
+                  Moje zamówienia (widoczne po zalogowaniu)
+                </a>
+              </li>
             </ul>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              Koszyk (widoczny po zalogowaniu)
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              Moje zamówienia (widoczne po zalogowaniu)
-            </a>
-          </li>
-        </ul>
-      </div>
-    </nav>
+          </div>
+        </nav>
 
-    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
-      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Przykładowy tytuł</h1>
-        <div class="btn-toolbar mb-2 mb-md-0">
-        </div>
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+          <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <h1 class="h2">{% block header %}O nas{% endblock %}</h1>
+            <div class="btn-toolbar mb-2 mb-md-0">
+            </div>
+          </div>
+          <div>
+            {% block content %}
+                <p>Zwierzęta wzbogajacą nasze życie każdego dnia. Nie powinniśmy pozostawać dłużni. :)</p>
+                <p>Teraz bez wychodzenia z domu możesz załatwić wszystko dla swojego pupila :)</p>
+                <p>Karmy i akcesoria dla zwierząt teraz w atrakcyjnych cenach w sklepie internetowym Animal Heaven.</p>
+                <img src="{% static 'images/diego.jpg' %}" class="rounded mx-auto d-block">
+
+            {% endblock %}
+          </div>
+        </main>
       </div>
-      <div>
-        tutej będę pisoł
-      </div>
-    </main>
-  </div>
-</div>
-<footer class="page-footer font-small blue pt-4 fixed-bottom">
+    </div>
+</body>
+
+<footer class="page-footer font-small blue pt-4">
     <div class="footer-copyright text-center py-3">
-      <i class="fas fa-clock">dzisiejsza data</i>
-  </div>
+        <span data-feather="calendar"></span>
+        <i class="fas fa-clock">{{ date }}</i>
+    </div>
 </footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.9.0/feather.min.js"></script>
+<script src="{% static 'js/base.js' %}"></script>
 </html>
