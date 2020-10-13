@@ -27,6 +27,13 @@
               <a class="nav-link" href="/accounts/logout/"><b>Wyloguj się</b></a>
             </li>
           </ul>
+          {% if user.is_superuser %}
+              <ul class="navbar-nav px-3">
+                <li class="nav-item text-nowrap">
+                    <a class="nav-link" href="/accounts/createadmin/"><b>Stwórz administratora sklepu</b></a>
+                </li>
+              </ul>
+          {% endif %}
       {% else %}
           <ul class="navbar-nav px-3">
             <li class="nav-item text-nowrap">

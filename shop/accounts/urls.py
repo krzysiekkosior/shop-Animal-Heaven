@@ -20,5 +20,5 @@ from accounts import views
 urlpatterns = [
     path('', include('django.contrib.auth.urls')),
     path('signup/', views.SignUpView.as_view(), name='sing_up'),
-
+    path('createadmin/', views.CreateAdmin.as_view()),
 ]
