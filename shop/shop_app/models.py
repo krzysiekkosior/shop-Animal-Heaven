@@ -20,7 +20,7 @@ class Brand(models.Model):
 
 
 class Product(models.Model):
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=100)
     description = models.TextField()
     price = models.FloatField()
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products')

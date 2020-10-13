@@ -19,18 +19,18 @@
       {% if user.is_authenticated %}
           <ul class="navbar-nav px-3">
             <li class="nav-item text-nowrap">
-              <a class="nav-link" href="#"><b>Witaj {{ user }}</b></a>
+              <b class="nav-link">Witaj {{ user }}</b>
             </li>
           </ul>
           <ul class="navbar-nav px-3">
             <li class="nav-item text-nowrap">
-              <a class="nav-link" href="#"><b>Wyloguj się</b></a>
+              <a class="nav-link" href="/accounts/logout/"><b>Wyloguj się</b></a>
             </li>
           </ul>
       {% else %}
           <ul class="navbar-nav px-3">
             <li class="nav-item text-nowrap">
-              <a class="nav-link" href="#"><b>Zaloguj się</b></a>
+              <a class="nav-link" href="/accounts/login/"><b>Zaloguj się</b></a>
             </li>
           </ul>
           <ul class="navbar-nav px-3">
