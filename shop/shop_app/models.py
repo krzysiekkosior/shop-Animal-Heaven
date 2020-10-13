@@ -13,7 +13,7 @@ class Category(models.Model):
 
 class Brand(models.Model):
     name = models.CharField(max_length=100, unique=True)
-    creation_date = models.IntegerField()
+    creation_year = models.IntegerField()
 
     def __str__(self):
         return self.name
@@ -27,5 +27,7 @@ class Product(models.Model):
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE, related_name='products')
 
     def __str__(self):
-        return {self.name}
+        return self.name
 
+    class Meta:
+        unique_together = ('name', 'brand')

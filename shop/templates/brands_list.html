@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block header %}
+    {{ header }}
+    {% if perms.shop_app.add_brand %}
+        <a href="/brand/add/"><button type="button" class="btn btn-success btn-sm">Dodaj</button></a>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <ul class="list-group">
+        {% for brand in brands %}
+            <li class="list-group-item d-flex">
+                <a href="/brand/{{ brand.id }}/" class="mr-auto p-2">{{ brand.name }} (rok założenia: {{ brand.creation_year }})</a>
+                {% if perms.shop_app.change_brand and perms.shop_app.delete_brand %}
+                    <a href="/brand/edit/{{ brand.id }}/"><button type="button" class="btn btn-info btn-sm p-2">Edytuj</button></a>
+                    <a href="/brand/delete/{{ brand.id }}/"><button type="button" class="btn btn-danger btn-sm p-2">Usuń</button></a>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+    <br>
+
+{% endblock %}
