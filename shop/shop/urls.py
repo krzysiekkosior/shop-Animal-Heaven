@@ -23,6 +23,8 @@ urlpatterns = [
     path('', shop.MainPageView.as_view(), name='main'),
     path('categories/', shop.CategoriesListView.as_view(), name='cat_list'),
     path('category/<int:pk>/', shop.CategoryDetailsView.as_view()),
-    path('category/add/', shop.CategoryAddView.as_view(), name='add_category')
+    path('category/add/', shop.CategoryAddView.as_view(), name='add_category'),
+    path('category/edit/<int:pk>/', shop.CategoryEditView.as_view()),
+    path('category/delete/<int:pk>/', shop.CategoryDeleteView.as_view()),
 
 ]

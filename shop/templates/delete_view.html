@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block header %}
+    {{ header }}
+{% endblock %}
+
+{% block content %}
+    <p>Czy na pewno chcesz usunąć <b>{{ object.name }}</b>?</p>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-success btn-sm" name="action" value="delete">Potwierdź</button>
+        <button type="submit" class="btn btn-danger btn-sm" name="action">Powrót</button>
+    </form>
+{% endblock %}

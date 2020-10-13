@@ -1,9 +1,9 @@
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.http import Http404
 from django.shortcuts import render, redirect
 from django.views import View
 from shop_app.forms import CategoryModelForm
 from shop_app.models import Category, Product, Brand
+from shop_app.utils import get_category
 
 
 class MainPageView(View):
@@ -25,14 +25,8 @@ class CategoriesListView(View):
 
 class CategoryDetailsView(View):
 
-    def get_category(self, pk):
-        try:
-            return Category.objects.get(pk=pk)
-        except Category.DoesNotExist:
-            raise Http404
-
     def get(self, request, pk):
-        category = self.get_category(pk)
+        category = get_category(pk)
         products = category.products.all().order_by('name')
         context = {
             'header': category.name,
@@ -42,7 +36,6 @@ class CategoryDetailsView(View):
 
 
 class CategoryAddView(PermissionRequiredMixin, View):
-
     permission_required = ['shop_app.add_category']
 
     def get(self, request):
@@ -63,4 +56,50 @@ class CategoryAddView(PermissionRequiredMixin, View):
             'form': form
         }
         return render(request, 'form.html', context)
+
+
+class CategoryEditView(PermissionRequiredMixin, View):
+    permission_required = ['shop_app.change_category']
+
+    def get(self, request, pk):
+        category = get_category(pk)
+        form = CategoryModelForm(instance=category)
+        context = {
+            'header': 'Edytuj kategorię',
+            'form': form
+        }
+        return render(request, 'form.html', context)
+
+    def post(self, request, pk):
+        form = CategoryModelForm(request.POST)
+        if form.is_valid():
+            category = Category.objects.get(pk=pk)
+            category.name = form.cleaned_data['name']
+            category.save()
+            return redirect('cat_list')
+        context = {
+            'header': 'Edytuj kategorię',
+            'form': form
+        }
+        return render(request, 'form.html', context)
+
+
+class CategoryDeleteView(PermissionRequiredMixin, View):
+    permission_required = ['shop_app.delete_category']
+
+    def get(self, request, pk):
+        category = get_category(pk)
+        context = {
+            'header': 'Usuń kategorię',
+            'object': category
+        }
+        return render(request, 'delete_view.html', context)
+
+    def post(self, request, pk):
+        action = request.POST.get('action')
+        if action == 'delete':
+            category = get_category(pk)
+            category.delete()
+        return redirect('cat_list')
+
 
