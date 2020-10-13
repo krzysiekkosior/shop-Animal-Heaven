@@ -29,6 +29,7 @@ urlpatterns = [
     path('brand/<int:pk>/', views.BrandDetailsView.as_view()),
     path('brand/add/', views.BrandAddView.as_view(), name='add_brand'),
     path('brand/edit/<int:pk>/', views.BrandEditView.as_view()),
+    path('brand/delete/<int:pk>/', views.BrandDeleteView.as_view()),
 
 ]
 

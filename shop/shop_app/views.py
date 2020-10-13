@@ -171,3 +171,22 @@ class BrandEditView(PermissionRequiredMixin, View):
             'form': form
         }
         return render(request, 'form.html', context)
+
+
+class BrandDeleteView(PermissionRequiredMixin, View):
+    permission_required = ['shop_app.delete_brand']
+
+    def get(self, request, pk):
+        brand = get_brand(pk)
+        context = {
+            'header': 'Usuń markę',
+            'object': brand
+        }
+        return render(request, 'delete_view.html', context)
+
+    def post(self, request, pk):
+        action = request.POST.get('action')
+        if action == 'delete':
+            brand = get_brand(pk)
+            brand.delete()
+        return redirect('brand_list')
