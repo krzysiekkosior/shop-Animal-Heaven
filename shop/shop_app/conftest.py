@@ -1,7 +1,7 @@
 import pytest
 from django.contrib.auth.models import User, Permission
 from django.test import Client
-from shop_app.models import Category
+from shop_app.models import Category, Brand
 
 
 @pytest.fixture
@@ -28,3 +28,8 @@ def client_perms():
     u.set_password('user1')
     u.save()
     return u
+
+@pytest.fixture
+def brand():
+    brand = Brand.objects.create(name='brand1', creation_year=1990)
+    return brand

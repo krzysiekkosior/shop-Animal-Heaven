@@ -10,15 +10,18 @@ def test_main_url(client):
     response = client.get(reverse_lazy('main'))
     assert response.status_code == 200
 
+
 @pytest.mark.django_db
 def test_categories_list_url(client):
     response = client.get(reverse_lazy('cat_list'))
     assert response.status_code == 200
 
+
 @pytest.mark.django_db
 def test_category_details_url(client, category):
     response = client.get(f'/category/{category.id}/')
     assert response.status_code == 200
+
 
 @pytest.mark.django_db
 def test_category_add(client, admin_perms, client_perms):
@@ -33,6 +36,7 @@ def test_category_add(client, admin_perms, client_perms):
     response = client.get(reverse_lazy('add_category'))
     assert response.status_code == 403
 
+
 @pytest.mark.django_db
 def test_category_edit(client, category, admin_perms, client_perms):
     client.login(username='admin', password='admin1')
@@ -44,6 +48,7 @@ def test_category_edit(client, category, admin_perms, client_perms):
     client.login(username='user', password='user1')
     response = client.get(reverse_lazy('add_category'))
     assert response.status_code == 403
+
 
 @pytest.mark.django_db
 def test_category_delete(client, category, admin_perms, client_perms):
@@ -58,3 +63,14 @@ def test_category_delete(client, category, admin_perms, client_perms):
     client.login(username='user', password='user1')
     response = client.get(f'/category/delete/{category.id}/')
     assert response.status_code == 403
+
+
+@pytest.mark.django_db
+def test_brands_list_url(client):
+    response = client.get(reverse_lazy('brand_list'))
+    assert response.status_code == 200
+
+@pytest.mark.django_db
+def test_brand_details_url(client, brand):
+    response = client.get(f'/brand/{brand.id}/')
+    assert response.status_code == 200
