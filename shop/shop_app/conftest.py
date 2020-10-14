@@ -17,7 +17,7 @@ def category():
 def admin_perms():
     u = User.objects.create(username='admin')
     u.set_password('admin1')
-    perms = [perm for perm in Permission.objects.filter(content_type_id__in=[7, 8, 9])]
+    perms = list(Permission.objects.filter(content_type_id__in=[7, 8, 9]))
     u.user_permissions.set(perms)
     u.save()
     return u

@@ -31,5 +31,7 @@ urlpatterns = [
     path('brand/edit/<int:pk>/', views.BrandEditView.as_view()),
     path('brand/delete/<int:pk>/', views.BrandDeleteView.as_view()),
 
-]
+    path('products/', views.ProductsListView.as_view(), name='product_list'),
+    path('product/<int:pk>/', views.ProductDetailsView.as_view()),
 
+]

@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.views import View
 from shop_app.forms import CategoryModelForm, BrandModelForm
 from shop_app.models import Category, Product, Brand
-from shop_app.utils import get_category, get_brand
+from shop_app.utils import get_category, get_brand, get_product
 
 
 class MainPageView(View):
@@ -190,3 +190,25 @@ class BrandDeleteView(PermissionRequiredMixin, View):
             brand = get_brand(pk)
             brand.delete()
         return redirect('brand_list')
+
+
+class ProductsListView(View):
+
+    def get(self, request):
+        products = Product.objects.all().order_by('name')
+        context = {
+            'header': 'Produkty',
+            'products': products
+        }
+        return render(request, 'products_list.html', context)
+
+
+class ProductDetailsView(View):
+
+    def get(self, request, pk):
+        product = get_product(pk)
+        context = {
+            'header': product.name,
+            'product': product
+        }
+        return render(request, 'product_details.html', context)

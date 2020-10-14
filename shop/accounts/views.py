@@ -31,6 +31,6 @@ class CreateAdmin(SuperUserCheck, CreateView):
     def form_valid(self, form):
         response = super(CreateAdmin, self).form_valid(form)
         user = self.object
-        perms = [perm for perm in Permission.objects.filter(content_type_id__in=[7, 8, 9])]
+        perms = list(Permission.objects.filter(content_type_id__in=[7, 8, 9]))
         user.user_permissions.set(perms)
         return response

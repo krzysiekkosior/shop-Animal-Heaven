@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block header %}
+    {{ header }}
+{% endblock %}
+
+{% block content %}
+    <ul class="list-group">
+        <li class="list-group-item">
+            <p><b>Kategoria</b>: {{ product.category.name }}</p>
+            <p><b>Marka</b>: {{ product.brand.name }}</p>
+            <p><b>Opis</b>: <i>{{ product.description }}</i></p>
+            <p><b>Cena</b>: {{ product.price }} zł</p>
+            <p>
+                {% if product.quantity == 0 %}
+                    <i>(aktualnie niedostępne)</i></a>
+                {% else %}
+                    <i>(dostępne {{ product.quantity }} szt.)</i></a>
+                {% endif %}
+            </p>
+        </li>
+    </ul>
+{% endblock %}
