@@ -13,7 +13,7 @@
             <p><b>Cena</b>: {{ product.price }} zł</p>
             <p>
                 {% if product.quantity == 0 %}
-                    <i>(aktualnie niedostępne)</i></a>
+                    <i>(brak produktów w magazynie)</i></a>
                 {% else %}
                     <i>(dostępne {{ product.quantity }} szt.)</i></a>
                 {% endif %}

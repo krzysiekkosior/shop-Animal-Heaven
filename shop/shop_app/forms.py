@@ -1,7 +1,6 @@
 from django import forms
-from django.forms import CharField
-
-from .models import Category, Brand
+from django.core.exceptions import NON_FIELD_ERRORS
+from .models import Category, Brand, Product
 
 
 class CategoryModelForm(forms.ModelForm):
@@ -19,7 +18,6 @@ class CategoryModelForm(forms.ModelForm):
 
 
 class BrandModelForm(forms.ModelForm):
-
     class Meta:
         model = Brand
         fields = '__all__'
@@ -31,4 +29,23 @@ class BrandModelForm(forms.ModelForm):
             'name': {
                 'unique': ("Marka o podanej nazwie już istnieje."),
             },
+        }
+
+
+class ProductModelForm(forms.ModelForm):
+    class Meta:
+        model = Product
+        fields = '__all__'
+        labels = {
+            'name': 'Nazwa',
+            'description': 'Opis',
+            'quantity': 'Dostępna ilość',
+            'price': 'Cena jednostkowa',
+            'category': 'Kategoria',
+            'brand': 'Marka'
+        }
+        error_messages = {
+            NON_FIELD_ERRORS: {
+                'unique_together': "Produkt o podanej marce już istnieje.",
+            }
         }

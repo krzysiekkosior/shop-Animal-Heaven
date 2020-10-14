@@ -1,7 +1,7 @@
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.shortcuts import render, redirect
 from django.views import View
-from shop_app.forms import CategoryModelForm, BrandModelForm
+from shop_app.forms import CategoryModelForm, BrandModelForm, ProductModelForm
 from shop_app.models import Category, Product, Brand
 from shop_app.utils import get_category, get_brand, get_product
 
@@ -212,3 +212,69 @@ class ProductDetailsView(View):
             'product': product
         }
         return render(request, 'product_details.html', context)
+
+
+class ProductAddView(PermissionRequiredMixin, View):
+    permission_required = ['shop_app.add_product']
+
+    def get(self, request):
+        form = ProductModelForm()
+        context = {
+            'header': 'Dodaj produkt',
+            'form': form
+        }
+        return render(request, 'form.html', context)
+
+    def post(self, request):
+        form = ProductModelForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('product_list')
+        context = {
+            'header': 'Dodaj produkt',
+            'form': form
+        }
+        return render(request, 'form.html', context)
+
+
+class ProductEditView(PermissionRequiredMixin, View):
+    permission_required = ['shop_app.change_product']
+
+    def get(self, request, pk):
+        product = get_product(pk)
+        form = ProductModelForm(instance=product)
+        context = {
+            'header': 'Edytuj produkt',
+            'form': form
+        }
+        return render(request, 'form.html', context)
+
+    def post(self, request, pk):
+        product = get_product(pk)
+        form = ProductModelForm(request.POST, instance=product)
+        if form.is_valid():
+            form.save()
+            return redirect('product_list')
+        context = {
+            'header': 'Edytuj produkt',
+            'form': form
+        }
+        return render(request, 'form.html', context)
+
+class ProductDeleteView(PermissionRequiredMixin, View):
+    permission_required = ['shop_app.delete_product']
+
+    def get(self, request, pk):
+        product = get_product(pk)
+        context = {
+            'header': 'Usuń produkt',
+            'object': product
+        }
+        return render(request, 'delete_view.html', context)
+
+    def post(self, request, pk):
+        action = request.POST.get('action')
+        if action == 'delete':
+            product = get_product(pk)
+            product.delete()
+        return redirect('product_list')

@@ -14,7 +14,7 @@
                 <a href="/product/{{ product.id }}/" class="mr-auto p-2">{{ product.name }} (firmy {{ product.brand.name }}) -
                 {{ product.price }} zł
                     {% if product.quantity == 0 %}
-                        <i>(aktualnie niedostępne)</i></a>
+                        <i>(brak produktów w magazynie)</i></a>
                     {% else %}
                         <i>(dostępne {{ product.quantity }} szt.)</i></a>
                     {% endif %}

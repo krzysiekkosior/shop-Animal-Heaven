@@ -1,6 +1,6 @@
 from django.urls import reverse_lazy
 import pytest
-from shop_app.models import Category, Brand
+from shop_app.models import Category, Brand, Product
 
 
 @pytest.mark.django_db
@@ -28,7 +28,7 @@ def test_add_category_as_admin(client, admin_perms):
     assert response.status_code == 200
 
     client.post(reverse_lazy('add_category'), {'name': 'test'})
-    assert Category.objects.all().count() == 1
+    assert Category.objects.count() == 1
     assert Category.objects.first().name == 'test'
 
 
@@ -50,7 +50,7 @@ def test_edit_category_as_admin(client, category, admin_perms):
 
 
 @pytest.mark.django_db
-def test_edit_category_as_client(client, category, client_perms):
+def test_edit_category_as_client(client, client_perms):
     client.login(username='user', password='user1')
     response = client.get(reverse_lazy('add_category'))
     assert response.status_code == 403
@@ -95,7 +95,7 @@ def test_add_brand_as_admin(client, admin_perms):
     assert response.status_code == 200
 
     client.post(reverse_lazy('add_brand'), {'name': 'test', 'creation_year': 2020})
-    assert Brand.objects.all().count() == 1
+    assert Brand.objects.count() == 1
     assert Brand.objects.first().name == 'test'
 
 
@@ -117,7 +117,7 @@ def test_edit_brand_as_admin(client, brand, admin_perms):
 
 
 @pytest.mark.django_db
-def test_edit_brand_as_client(client, brand, client_perms):
+def test_edit_brand_as_client(client, client_perms):
     client.login(username='user', password='user1')
     response = client.get(reverse_lazy('add_brand'))
     assert response.status_code == 403
@@ -135,8 +135,82 @@ def test_delete_brand_as_admin(client, brand, admin_perms):
     client.post(f'/brand/delete/{brand.id}/', {'action': 'delete'})
     assert Brand.objects.count() == 0
 
+
 @pytest.mark.django_db
 def test_delete_brand_as_client(client, brand, client_perms):
     client.login(username='user', password='user1')
     response = client.get(f'/brand/delete/{brand.id}/')
     assert response.status_code == 403
+
+
+@pytest.mark.django_db
+def test_products_list_url(client):
+    response = client.get(reverse_lazy('product_list'))
+    assert response.status_code == 200
+
+
+@pytest.mark.django_db
+def test_product_details_url(client, product):
+    response = client.get(f'/product/{product.id}/')
+    assert response.status_code == 200
+
+
+@pytest.mark.django_db
+def test_add_product_as_admin(client, category, brand, admin_perms):
+    client.login(username='admin', password='admin1')
+    response = client.get(reverse_lazy('add_product'))
+    assert response.status_code == 200
+    context = {
+        'name': 'testproduct1',
+        'description': 'testdescription1',
+        'quantity': 101,
+        'price': 33,
+        'category': category.id,
+        'brand': brand.id
+    }
+    client.post(reverse_lazy('add_product'), context)
+    assert Product.objects.count() == 1
+    assert Product.objects.first().quantity == 101
+
+
+@pytest.mark.django_db
+def test_add_product_as_client(client, client_perms):
+    client.login(username='user', password='user1')
+    response = client.get(reverse_lazy('add_category'))
+    assert response.status_code == 403
+
+
+@pytest.mark.django_db
+def test_edit_product_as_admin(client, category, brand, product, admin_perms):
+    client.login(username='admin', password='admin1')
+    response = client.get(f'/product/edit/{product.id}/')
+    assert response.status_code == 200
+    context = {
+        'name': 'testproduct1',
+        'description': 'testdescription1',
+        'quantity': 101,
+        'price': 33,
+        'category': category.id,
+        'brand': brand.id
+    }
+    client.post(f'/product/edit/{product.id}/', context)
+    assert Product.objects.first().name == 'testproduct1'
+
+
+@pytest.mark.django_db
+def test_edit_product_as_client(client, client_perms):
+    client.login(username='user', password='user1')
+    response = client.get(reverse_lazy('add_product'))
+    assert response.status_code == 403
+
+@pytest.mark.django_db
+def test_delete_product_as_admin(client, product, admin_perms):
+    client.login(username='admin', password='admin1')
+    response = client.get(f'/product/delete/{product.id}/')
+    assert response.status_code == 200
+
+    client.post(f'/product/delete/{product.id}/', {'action': ''})
+    assert Product.objects.count() == 1
+
+    client.post(f'/product/delete/{product.id}/', {'action': 'delete'})
+    assert Product.objects.count() == 0
