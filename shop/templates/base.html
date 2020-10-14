@@ -27,13 +27,6 @@
               <a class="nav-link" href="/accounts/logout/"><b>Wyloguj się</b></a>
             </li>
           </ul>
-          {% if user.is_superuser %}
-              <ul class="navbar-nav px-3">
-                <li class="nav-item text-nowrap">
-                    <a class="nav-link" href="/accounts/createadmin/"><b>Stwórz administratora sklepu</b></a>
-                </li>
-              </ul>
-          {% endif %}
       {% else %}
           <ul class="navbar-nav px-3">
             <li class="nav-item text-nowrap">
@@ -77,18 +70,60 @@
                     Nasze marki
                 </a>
               </li>
+            {% if user.is_authenticated %}
+              <li class="nav-item">
+                      <p class="nav-link"></p>
+              </li>
               <li class="nav-item">
                 <a class="nav-link" href="#">
                       <span data-feather="shopping-cart"></span>
-                      Koszyk (widoczny po zalogowaniu)
+                      Koszyk
                 </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="#">
                     <span data-feather="layers"></span>
-                    Moje zamówienia (widoczne po zalogowaniu)
+                    Moje zamówienia
                 </a>
               </li>
+            {% endif %}
+                {% if perms.shop_app.add_shipment and perms.shop_app.add_order %}
+                  <li class="nav-item">
+                    <p class="nav-link"></p>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="/shipments/">
+                        <span data-feather="mail"></span>
+                        Sposoby dostawy
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <span data-feather="layers"></span>
+                        Wszystkie zamówienia
+                    </a>
+                  </li>
+                {% endif %}
+
+                {% if user.is_superuser %}
+                  <li class="nav-item">
+                    <p class="nav-link"></p>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="/accounts/createadmin/">
+                        <span data-feather="command"></span>
+                        Stwórz administratora sklepu
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="/admin/">
+                        <span data-feather="command"></span>
+                        Przejdź do panelu SuperUsera
+                    </a>
+                  </li>
+                {% endif %}
+
+
             </ul>
           </div>
         </nav>

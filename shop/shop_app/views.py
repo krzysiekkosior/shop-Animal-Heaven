@@ -1,9 +1,9 @@
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.shortcuts import render, redirect
 from django.views import View
-from shop_app.forms import CategoryModelForm, BrandModelForm, ProductModelForm
-from shop_app.models import Category, Product, Brand
-from shop_app.utils import get_category, get_brand, get_product
+from shop_app.forms import CategoryModelForm, BrandModelForm, ProductModelForm, ShipmentModelForm
+from shop_app.models import Category, Product, Brand, Order, Shipment
+from shop_app.utils import get_category, get_brand, get_product, get_shipment
 
 
 class MainPageView(View):
@@ -261,6 +261,7 @@ class ProductEditView(PermissionRequiredMixin, View):
         }
         return render(request, 'form.html', context)
 
+
 class ProductDeleteView(PermissionRequiredMixin, View):
     permission_required = ['shop_app.delete_product']
 
@@ -278,3 +279,83 @@ class ProductDeleteView(PermissionRequiredMixin, View):
             product = get_product(pk)
             product.delete()
         return redirect('product_list')
+
+
+class ShipmentsListView(PermissionRequiredMixin, View):
+    permission_required = ['shop_app.view_shipment']
+
+    def get(self, request):
+        shipments = Shipment.objects.all().order_by('price')
+        context = {
+            'header': 'Sposoby dostawy',
+            'shipments': shipments
+        }
+        return render(request, 'shipments_list.html', context)
+
+
+class ShipmentAddView(PermissionRequiredMixin, View):
+    permission_required = ['shop_app.add_shipment']
+
+    def get(self, request):
+        form = ShipmentModelForm()
+        context = {
+            'header': 'Dodaj sposób dostawy',
+            'form': form
+        }
+        return render(request, 'form.html', context)
+
+    def post(self, request):
+        form = ShipmentModelForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('shipment_list')
+        context = {
+            'header': 'Dodaj sposób dostawy',
+            'form': form
+        }
+        return render(request, 'form.html', context)
+
+
+class ShipmentEditView(PermissionRequiredMixin, View):
+    permission_required = ['shop_app.change_shipment']
+
+    def get(self, request, pk):
+        shipment = get_shipment(pk)
+        form = ShipmentModelForm(instance=shipment)
+        context = {
+            'header': 'Edytuj sposób dostawy',
+            'form': form
+        }
+        return render(request, 'form.html', context)
+
+    def post(self, request, pk):
+        shipment = get_shipment(pk)
+        form = ShipmentModelForm(request.POST, instance=shipment)
+        if form.is_valid():
+            form.save()
+            return redirect('shipment_list')
+        context = {
+            'header': 'Edytuj sposób dostawy',
+            'form': form
+        }
+        return render(request, 'form.html', context)
+
+
+class ShipmentDeleteView(PermissionRequiredMixin, View):
+    permission_required = ['shop_app.delete_shipment']
+
+    def get(self, request, pk):
+        shipment = get_shipment(pk)
+        context = {
+            'header': 'Usuń sposób dostawy',
+            'object': shipment
+        }
+        return render(request, 'delete_view.html', context)
+
+    def post(self, request, pk):
+        action = request.POST.get('action')
+        if action == 'delete':
+            shipment = get_shipment(pk)
+            shipment.delete()
+        return redirect('shipment_list')
+

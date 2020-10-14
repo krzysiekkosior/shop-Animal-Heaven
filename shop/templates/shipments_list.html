@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block header %}
+    {{ header }}
+        <a href="/shipment/add/"><button type="button" class="btn btn-success btn-sm">Dodaj</button></a>
+{% endblock %}
+
+{% block content %}
+    <ul class="list-group">
+        {% for shipment in shipments %}
+            <li class="list-group-item d-flex">
+                <p class="mr-auto p-2">{{ shipment.name }} (koszt: {{ shipment.price }} zł)</p>
+                <a href="/shipment/edit/{{ shipment.id }}/"><button type="button" class="btn btn-info btn-sm p-2">Edytuj</button></a>
+                <a href="/shipment/delete/{{ shipment.id }}/"><button type="button" class="btn btn-danger btn-sm p-2">Usuń</button></a>
+            </li>
+        {% endfor %}
+    </ul>
+    <br>
+
+{% endblock %}

@@ -1,6 +1,6 @@
 from django import forms
 from django.core.exceptions import NON_FIELD_ERRORS
-from .models import Category, Brand, Product
+from .models import Category, Brand, Product, Shipment
 
 
 class CategoryModelForm(forms.ModelForm):
@@ -48,4 +48,19 @@ class ProductModelForm(forms.ModelForm):
             NON_FIELD_ERRORS: {
                 'unique_together': "Produkt o podanej marce już istnieje.",
             }
+        }
+
+
+class ShipmentModelForm(forms.ModelForm):
+    class Meta:
+        model = Shipment
+        fields = '__all__'
+        labels = {
+            'name': 'Sposób dostawy',
+            'price': 'Cena',
+        }
+        error_messages = {
+            'name': {
+                'unique': ("Sposób dostawy o podanej nazwie już istnieje."),
+            },
         }

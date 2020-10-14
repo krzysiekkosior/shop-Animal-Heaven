@@ -37,4 +37,9 @@ urlpatterns = [
     path('product/edit/<int:pk>/', views.ProductEditView.as_view()),
     path('product/delete/<int:pk>/', views.ProductDeleteView.as_view()),
 
+    path('shipments/', views.ShipmentsListView.as_view(), name='shipment_list'),
+    path('shipment/add/', views.ShipmentAddView.as_view(), name='add_shipment'),
+    path('shipment/edit/<int:pk>/', views.ShipmentEditView.as_view()),
+    path('shipment/delete/<int:pk>/', views.ShipmentDeleteView.as_view()),
+
 ]

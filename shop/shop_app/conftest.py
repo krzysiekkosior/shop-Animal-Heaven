@@ -1,7 +1,7 @@
 import pytest
 from django.contrib.auth.models import User, Permission
 from django.test import Client
-from shop_app.models import Category, Brand, Product
+from shop_app.models import Category, Brand, Product, Shipment
 
 
 @pytest.fixture
@@ -19,7 +19,7 @@ def category():
 def admin_perms():
     u = User.objects.create(username='admin')
     u.set_password('admin1')
-    perms = list(Permission.objects.filter(content_type_id__in=[7, 8, 9]))
+    perms = list(Permission.objects.filter(content_type_id__in=[7, 8, 9, 10, 11]))
     u.user_permissions.set(perms)
     u.save()
     return u
@@ -46,3 +46,9 @@ def product(category, brand):
         category=category, brand=brand
     )
     return product
+
+
+@pytest.fixture
+def shipment():
+    shipment = Shipment.objects.create(name='shipment1', price=9.99)
+    return shipment
