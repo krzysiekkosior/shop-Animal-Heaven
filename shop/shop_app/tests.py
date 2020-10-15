@@ -1,5 +1,7 @@
 from django.urls import reverse_lazy
 import pytest
+
+from accounts.models import Address
 from shop_app.models import Category, Brand, Product, Shipment
 
 
@@ -33,7 +35,7 @@ def test_add_category_as_admin(client, admin_perms):
 
 
 @pytest.mark.django_db
-def test_add_category_as_client(client, customer_perms):
+def test_add_category_as_customer(client, customer_perms):
     client.login(username='user', password='user1')
     response = client.get(reverse_lazy('add_category'))
     assert response.status_code == 403
@@ -50,7 +52,7 @@ def test_edit_category_as_admin(client, category, admin_perms):
 
 
 @pytest.mark.django_db
-def test_edit_category_as_client(client, category, customer_perms):
+def test_edit_category_as_customer(client, category, customer_perms):
     client.login(username='user', password='user1')
     response = client.get(f'/category/edit/{category.id}/')
     assert response.status_code == 403
@@ -70,7 +72,7 @@ def test_delete_category_as_admin(client, category, admin_perms):
 
 
 @pytest.mark.django_db
-def test_delete_category_as_client(client, category, customer_perms):
+def test_delete_category_as_customer(client, category, customer_perms):
     client.login(username='user', password='user1')
     response = client.get(f'/category/delete/{category.id}/')
     assert response.status_code == 403
@@ -100,7 +102,7 @@ def test_add_brand_as_admin(client, admin_perms):
 
 
 @pytest.mark.django_db
-def test_add_brand_as_client(client, customer_perms):
+def test_add_brand_as_customer(client, customer_perms):
     client.login(username='user', password='user1')
     response = client.get(reverse_lazy('add_brand'))
     assert response.status_code == 403
@@ -117,7 +119,7 @@ def test_edit_brand_as_admin(client, brand, admin_perms):
 
 
 @pytest.mark.django_db
-def test_edit_brand_as_client(client, brand, customer_perms):
+def test_edit_brand_as_customer(client, brand, customer_perms):
     client.login(username='user', password='user1')
     response = client.get(f'/brand/edit/{brand.id}/')
     assert response.status_code == 403
@@ -137,7 +139,7 @@ def test_delete_brand_as_admin(client, brand, admin_perms):
 
 
 @pytest.mark.django_db
-def test_delete_brand_as_client(client, brand, customer_perms):
+def test_delete_brand_as_customer(client, brand, customer_perms):
     client.login(username='user', password='user1')
     response = client.get(f'/brand/delete/{brand.id}/')
     assert response.status_code == 403
@@ -174,7 +176,7 @@ def test_add_product_as_admin(client, category, brand, admin_perms):
 
 
 @pytest.mark.django_db
-def test_add_product_as_client(client, customer_perms):
+def test_add_product_as_customer(client, customer_perms):
     client.login(username='user', password='user1')
     response = client.get(reverse_lazy('add_category'))
     assert response.status_code == 403
@@ -198,7 +200,7 @@ def test_edit_product_as_admin(client, category, brand, product, admin_perms):
 
 
 @pytest.mark.django_db
-def test_edit_product_as_client(client, product, customer_perms):
+def test_edit_product_as_customer(client, product, customer_perms):
     client.login(username='user', password='user1')
     response = client.get(f'/product/edit/{product.id}/')
     assert response.status_code == 403
@@ -218,7 +220,7 @@ def test_delete_product_as_admin(client, product, admin_perms):
 
 
 @pytest.mark.django_db
-def test_delete_product_as_client(client, product, customer_perms):
+def test_delete_product_as_customer(client, product, customer_perms):
     client.login(username='user', password='user1')
     response = client.get(f'/product/delete/{product.id}/')
     assert response.status_code == 403
@@ -232,7 +234,7 @@ def test_shipments_list_url_as_admin(client, admin_perms):
 
 
 @pytest.mark.django_db
-def test_shipments_list_url_as_client(client, customer_perms):
+def test_shipments_list_url_as_customer(client, customer_perms):
     client.login(username='user', password='user1')
     response = client.get(reverse_lazy('shipment_list'))
     assert response.status_code == 403
@@ -250,7 +252,7 @@ def test_add_shipment_as_admin(client, admin_perms):
 
 
 @pytest.mark.django_db
-def test_add_shipment_as_client(client, customer_perms):
+def test_add_shipment_as_customer(client, customer_perms):
     client.login(username='user', password='user1')
     response = client.get(reverse_lazy('add_shipment'))
     assert response.status_code == 403
@@ -267,7 +269,7 @@ def test_edit_shipment_as_admin(client, shipment, admin_perms):
 
 
 @pytest.mark.django_db
-def test_edit_shipment_as_client(client, shipment, customer_perms):
+def test_edit_shipment_as_customer(client, shipment, customer_perms):
     client.login(username='user', password='user1')
     response = client.get(f'/shipment/edit/{shipment.id}/')
     assert response.status_code == 403
@@ -287,7 +289,31 @@ def test_delete_shipment_as_admin(client, shipment, admin_perms):
 
 
 @pytest.mark.django_db
-def test_delete_shipment_as_client(client, shipment, customer_perms):
+def test_delete_shipment_as_customer(client, shipment, customer_perms):
     client.login(username='user', password='user1')
     response = client.get(f'/shipment/delete/{shipment.id}/')
     assert response.status_code == 403
+
+
+@pytest.mark.django_db
+def test_profile_url_as_customer(client, customer_perms):
+    client.login(username='user', password='user1')
+    response = client.get(reverse_lazy('profile'))
+    assert response.status_code == 200
+
+
+@pytest.mark.django_db
+def test_edit_address_as_customer(client, customer_perms):
+    client.login(username='user', password='user1')
+    response = client.get(reverse_lazy('address'))
+    assert response.status_code == 200
+
+    context = {
+        'user': customer_perms,
+        'city': 'Warszawa',
+        'street': 'Prosta',
+        'building_number': '51',
+        'postal_code': '00-838'
+    }
+    client.post(reverse_lazy('address'), context)
+    assert Address.objects.first().street == 'Prosta'

@@ -70,20 +70,26 @@
                     Nasze marki
                 </a>
               </li>
-            {% if user.is_authenticated %}
+            {% if perms.accounts.change_address %}
               <li class="nav-item">
                       <p class="nav-link"></p>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="#">
                       <span data-feather="shopping-cart"></span>
-                      Koszyk
+                      Mój koszyk
                 </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="#">
                     <span data-feather="layers"></span>
                     Moje zamówienia
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/accounts/profile/">
+                    <span data-feather="layers"></span>
+                    Mój profil
                 </a>
               </li>
             {% endif %}

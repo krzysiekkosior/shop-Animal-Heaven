@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block header %}
+    {{ header }}
+{% endblock %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+    <ul class="list-group">
+        <li class="list-group-item d-flex">
+            <p class="mr-auto p-2">Nick: <b>{{ user.username }}</b></p>
+        </li>
+        {% if address.city %}
+            <li class="list-group-item d-flex">
+                <p  class="mr-auto p-2">Adres:<b> ul. {{ address.street }} {{ address.building_number }}
+            {% if address.flat_number %} m. {{ address.flat_number }} {% endif %},
+                 {{ address.city }} {{ address.postal_code }}</b></p>
+            <a href="/accounts/address/"><button type="button" class="btn btn-success btn-sm p-2">Edytuj adres</button></a>
+            </li>
+        {% else %}
+            <li class="list-group-item">
+                <a href="/accounts/address/"><button type="button" class="btn btn-success btn-sm">Dodaj adres</button></a>
+            </li>
+        {% endif %}
+    </ul>
+    {% endif %}
+{% endblock %}

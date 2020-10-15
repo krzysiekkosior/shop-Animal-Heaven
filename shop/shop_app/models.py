@@ -58,14 +58,3 @@ class Order(models.Model):
 
     def __str__(self):
         return f'{self.number} - {self.user}'
-
-
-# class Address(models.Model):
-#     user = models.OneToOneField(User, on_delete=models.CASCADE)
-#     city = models.CharField(max_length=100, null=True, default=None)
-#     street = models.CharField(max_length=100, null=True, default=None)
-#     building_number = models.CharField(max_length=100, null=True, default=None)
-#     flat_number = models.IntegerField(null=True, default=None, blank=True)
-#     postal_code = models.CharField(null=True, default=None)
-
-
