@@ -26,7 +26,7 @@ def admin_perms():
 
 
 @pytest.fixture
-def client_perms():
+def customer_perms():
     u = User.objects.create(username='user')
     u.set_password('user1')
     u.save()
