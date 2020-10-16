@@ -218,7 +218,12 @@ class ProductDetailsView(View):
         cart = ShoppingCart.objects.get(user=user)
         product = get_product(pk)
         amount = request.POST.get('amount')
-        Amount.objects.create(amount=amount, shopping_cart=cart, product=product)
+        try:
+            product_in_cart = Amount.objects.get(shopping_cart=cart, product=product)
+            product_in_cart.amount += int(amount)
+            product_in_cart.save()
+        except Amount.DoesNotExist:
+            Amount.objects.create(amount=amount, shopping_cart=cart, product=product)
         product.quantity -= int(amount)
         product.save()
         return redirect('cart')
