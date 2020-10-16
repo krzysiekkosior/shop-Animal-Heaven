@@ -32,7 +32,7 @@ class CategoryDetailsView(View):
             'header': category.name,
             'products': products
         }
-        return render(request, 'brand_or_category_details.html', context)
+        return render(request, 'products_list.html', context)
 
 
 class CategoryAddView(PermissionRequiredMixin, View):
@@ -122,7 +122,7 @@ class BrandDetailsView(View):
             'header': brand.name,
             'products': products
         }
-        return render(request, 'brand_or_category_details.html', context)
+        return render(request, 'products_list.html', context)
 
 
 class BrandAddView(PermissionRequiredMixin, View):
