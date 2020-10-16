@@ -19,5 +19,15 @@
                 {% endif %}
             </p>
         </li>
+        <li class="list-group-item">
+        {% if user.is_authenticated and product.quantity > 0 %}
+              <form method="post">
+                {% csrf_token %}
+                Liczba sztuk: <input type="number" name="amount" max="{{ product.quantity }}">
+                <button type="submit" class="btn btn-success btn-sm">Dodaj do koszyka</button>
+             </form>
+{#            {% include 'add_product_form.html' %}#}
+        {% endif %}
+        </li>
     </ul>
 {% endblock %}

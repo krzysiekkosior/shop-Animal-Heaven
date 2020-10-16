@@ -42,6 +42,6 @@ urlpatterns = [
     path('shipment/edit/<int:pk>/', views.ShipmentEditView.as_view()),
     path('shipment/delete/<int:pk>/', views.ShipmentDeleteView.as_view()),
 
-    path('cart/', views.CartView.as_view()),
+    path('cart/', views.CartView.as_view(), name='cart'),
 
 ]

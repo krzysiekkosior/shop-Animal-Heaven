@@ -11,13 +11,14 @@
     <ul class="list-group">
         {% for p in products %}
             <li class="list-group-item">
-                <p><b>{{ p.product }}</b> ({{ p.product.price }} zł/szt.)</p>
+                <p><a href="/product/{{ p.product.id }}/"><b>{{ p.product }}</b></a> ({{ p.product.price }} zł/szt.)</p>
                 <p>Ilość: {{ p.amount }} szt.</p>
                 <p><i>Łącznie: {{ p.get_cost_of_products }} zł</i></p>
             </li>
         {% endfor %}
         <li class="list-group-item">
-            <p><b><i>SUMA: {{ cart.get_total_cost }} zł</i></b></p>
+            <p><b><i>ŁĄCZNIE DO ZAPŁATY: {{ cart.get_total_cost }} zł</i></b></p>
         </li>
+
     </ul>
 {% endblock %}

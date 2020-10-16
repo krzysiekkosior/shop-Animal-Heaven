@@ -209,9 +209,19 @@ class ProductDetailsView(View):
         product = get_product(pk)
         context = {
             'header': product.name,
-            'product': product
+            'product': product,
         }
         return render(request, 'product_details.html', context)
+
+    def post(self, request, pk):
+        user = request.user
+        cart = ShoppingCart.objects.get(user=user)
+        product = get_product(pk)
+        amount = request.POST.get('amount')
+        Amount.objects.create(amount=amount, shopping_cart=cart, product=product)
+        product.quantity -= int(amount)
+        product.save()
+        return redirect('cart')
 
 
 class ProductAddView(PermissionRequiredMixin, View):
