@@ -15,7 +15,9 @@
   <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-toggle="collapse" data-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
-  <input class="form-control form-control-light w-100" type="text" placeholder="Szukaj" aria-label="Search">
+    <form class="w-100" action="{% url 'product_list' %}">
+  <input name="searched" class="form-control form-control-light w-100" type="text" placeholder="Szukaj produktu" aria-label="Search">
+    </form>
       {% if user.is_authenticated %}
           <ul class="navbar-nav px-3">
             <li class="nav-item text-nowrap">

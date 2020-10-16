@@ -195,7 +195,11 @@ class BrandDeleteView(PermissionRequiredMixin, View):
 class ProductsListView(View):
 
     def get(self, request):
-        products = Product.objects.all().order_by('name')
+        searched = request.GET.get('searched')
+        if searched is not None:
+            products = Product.objects.filter(name__icontains=searched).order_by('name')
+        else:
+            products = Product.objects.all().order_by('name')
         context = {
             'header': 'Produkty',
             'products': products

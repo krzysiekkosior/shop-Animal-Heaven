@@ -23,6 +23,10 @@
                     <a href="/product/delete/{{ product.id }}/"><button type="button" class="btn btn-danger btn-sm p-2">Usuń</button></a>
                 {% endif %}
             </li>
+            {% empty %}
+            <li class="list-group-item d-flex">
+                <p><i>Brak wyników spełniające kryteria wyszukiwania.</i></p>
+            </li>
         {% endfor %}
     </ul>
     <br>
