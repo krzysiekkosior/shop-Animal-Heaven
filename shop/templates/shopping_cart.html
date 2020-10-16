@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block header %}
+    {{ header }}
+{% endblock %}
+
+{% block content %}
+    {% if cart.is_cart_empty %}
+        <p><i>pusty</i></p>
+    {% endif %}
+    <ul class="list-group">
+        {% for p in products %}
+            <li class="list-group-item">
+                <p><b>{{ p.product }}</b> ({{ p.product.price }} zł/szt.)</p>
+                <p>Ilość: {{ p.amount }} szt.</p>
+                <p><i>Łącznie: {{ p.get_cost_of_products }} zł</i></p>
+            </li>
+        {% endfor %}
+        <li class="list-group-item">
+            <p><b><i>SUMA: {{ cart.get_total_cost }} zł</i></b></p>
+        </li>
+    </ul>
+{% endblock %}

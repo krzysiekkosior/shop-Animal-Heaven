@@ -38,7 +38,7 @@ class Product(models.Model):
 
 
 class Shipment(models.Model):
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=100, unique=True, null=True)
     price = models.DecimalField(max_digits=5, decimal_places=2)
 
     def __str__(self):
@@ -58,3 +58,33 @@ class Order(models.Model):
 
     def __str__(self):
         return f'{self.number} - {self.user}'
+
+
+class ShoppingCart(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    products = models.ManyToManyField(Product, through='Amount')
+    shipment = models.ForeignKey(Shipment, on_delete=models.CASCADE, null=True, default=None)
+
+    def is_cart_empty(self):
+        return self.products.count() == 0
+
+    def __str__(self):
+        return f'Koszyk należący do {self.user}'
+
+    def get_total_cost(self):
+        total_cost = 0
+        for product in self.amount_set.all():
+            total_cost += product.get_cost_of_products()
+        return total_cost
+
+
+class Amount(models.Model):
+    amount = models.IntegerField()
+    shopping_cart = models.ForeignKey(ShoppingCart, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.product.name} - {self.amount} szt.'
+
+    def get_cost_of_products(self):
+        return self.amount * self.product.price

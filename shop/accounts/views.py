@@ -9,6 +9,7 @@ from django.contrib.auth.mixins import UserPassesTestMixin, PermissionRequiredMi
 
 from accounts.forms import AddressModelForm
 from accounts.models import Address
+from shop_app.models import ShoppingCart
 
 
 class SuperUserCheck(UserPassesTestMixin, View):
@@ -25,7 +26,9 @@ class SignUpView(CreateView):
         response = super(SignUpView, self).form_valid(form)
         customer = self.object
         Address.objects.create(user=customer)
+        ShoppingCart.objects.create(user=customer)
         customer.user_permissions.add(Permission.objects.get(codename='change_address'))
+        customer.user_permissions.add(Permission.objects.get(codename='change_shoppingcart'))
         login(self.request, customer)
         return response
 

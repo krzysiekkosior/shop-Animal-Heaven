@@ -11,4 +11,9 @@ class Address(models.Model):
     postal_code = models.CharField(max_length=6, null=True, default=None)
 
     def __str__(self):
+        if self.street is None:
+            return f'{self.user.username} - brak adresu'
         return f'{self.user.username} - {self.street} {self.building_number}'
+
+    class Meta:
+        verbose_name_plural = "Addresses"

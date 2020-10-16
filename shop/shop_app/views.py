@@ -2,7 +2,7 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.shortcuts import render, redirect
 from django.views import View
 from shop_app.forms import CategoryModelForm, BrandModelForm, ProductModelForm, ShipmentModelForm
-from shop_app.models import Category, Product, Brand, Order, Shipment
+from shop_app.models import Category, Product, Brand, Order, Shipment, ShoppingCart, Amount
 from shop_app.utils import get_category, get_brand, get_product, get_shipment
 
 
@@ -359,3 +359,16 @@ class ShipmentDeleteView(PermissionRequiredMixin, View):
             shipment.delete()
         return redirect('shipment_list')
 
+
+class CartView(PermissionRequiredMixin, View):
+    permission_required = ['shop_app.change_shoppingcart']
+
+    def get(self, request):
+        cart = ShoppingCart.objects.get(user=request.user)
+        products = Amount.objects.filter(shopping_cart=cart)
+        context = {
+            'header': 'Koszyk',
+            'cart': cart,
+            'products': products
+        }
+        return render(request, 'shopping_cart.html', context)
