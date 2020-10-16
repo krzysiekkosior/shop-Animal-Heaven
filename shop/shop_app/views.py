@@ -382,3 +382,15 @@ class CartView(PermissionRequiredMixin, View):
             'products': products
         }
         return render(request, 'shopping_cart.html', context)
+
+
+class RemoveProductFromCart(View):
+
+    def get(self, request, pk):
+        cart = ShoppingCart.objects.get(user=request.user)
+        product = get_product(pk)
+        amount_of_products = Amount.objects.get(shopping_cart=cart, product=product)
+        product.quantity += amount_of_products.amount
+        product.save()
+        amount_of_products.delete()
+        return redirect('cart')

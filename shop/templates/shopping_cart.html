@@ -14,6 +14,7 @@
                 <p><a href="/product/{{ p.product.id }}/"><b>{{ p.product }}</b></a> ({{ p.product.price }} zł/szt.)</p>
                 <p>Ilość: {{ p.amount }} szt.</p>
                 <p><i>Łącznie: {{ p.get_cost_of_products }} zł</i></p>
+            <a href="/cart/delete/{{ p.product.id }}/"><button type="button" class="btn btn-danger btn-sm p-2">Usuń z koszyka</button></a>
             </li>
         {% endfor %}
         <li class="list-group-item">
