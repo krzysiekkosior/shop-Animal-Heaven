@@ -10,18 +10,25 @@
         <li class="list-group-item d-flex">
             <p class="mr-auto p-2">Nick: <b>{{ user.username }}</b></p>
         </li>
-        {% if address.city %}
+        <li class="list-group-item d-flex">
+            <p class="mr-auto p-2"><i>Twoje adresy dostawy:</i></p>
+        </li>
+        {% for address in addresses %}
             <li class="list-group-item d-flex">
                 <p  class="mr-auto p-2">Adres:<b> ul. {{ address.street }} {{ address.building_number }}
             {% if address.flat_number %} m. {{ address.flat_number }} {% endif %},
                  {{ address.city }} {{ address.postal_code }}</b></p>
-            <a href="/accounts/address/"><button type="button" class="btn btn-success btn-sm p-2">Edytuj adres</button></a>
+            <a href="/accounts/address/edit/{{ address.id }}/"><button type="button" class="btn btn-success btn-sm p-2">Edytuj adres</button></a>
             </li>
-        {% else %}
+        {% empty %}
             <li class="list-group-item">
-                <a href="/accounts/address/"><button type="button" class="btn btn-success btn-sm">Dodaj adres</button></a>
+                <p><i>Brak dostepnych adresów. Kliknij przycisk, aby dodać adres.</i></p>
             </li>
-        {% endif %}
+        {% endfor %}
+            <li class="list-group-item">
+                <a href="/accounts/address/add/"><button type="button" class="btn btn-success btn-sm">Dodaj adres</button></a>
+            </li>
+
     </ul>
     {% endif %}
 {% endblock %}

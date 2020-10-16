@@ -9,6 +9,7 @@ from django.contrib.auth.mixins import UserPassesTestMixin, PermissionRequiredMi
 
 from accounts.forms import AddressModelForm
 from accounts.models import Address
+from accounts.utils import get_address
 from shop_app.models import ShoppingCart
 
 
@@ -19,15 +20,15 @@ class SuperUserCheck(UserPassesTestMixin, View):
 
 class SignUpView(CreateView):
     form_class = UserCreationForm
-    success_url = f'/accounts/address/'
+    success_url = f'/accounts/profile/'
     template_name = 'form.html'
 
     def form_valid(self, form):
         response = super(SignUpView, self).form_valid(form)
         customer = self.object
-        Address.objects.create(user=customer)
         ShoppingCart.objects.create(user=customer)
         customer.user_permissions.add(Permission.objects.get(codename='change_address'))
+        customer.user_permissions.add(Permission.objects.get(codename='add_address'))
         customer.user_permissions.add(Permission.objects.get(codename='change_shoppingcart'))
         login(self.request, customer)
         return response
@@ -46,12 +47,11 @@ class CreateAdmin(SuperUserCheck, CreateView):
         return response
 
 
-class EditAddressView(PermissionRequiredMixin, View):
-    permission_required = ['accounts.change_address']
+class AddAddressView(PermissionRequiredMixin, View):
+    permission_required = ['accounts.add_address']
 
     def get(self, request):
-        address = Address.objects.get(user=request.user)
-        form = AddressModelForm(instance=address)
+        form = AddressModelForm(initial={'user': request.user})
         context = {
             'header': 'Adres dostawy',
             'form': form
@@ -59,11 +59,34 @@ class EditAddressView(PermissionRequiredMixin, View):
         return render(request, 'form.html', context)
 
     def post(self, request):
-        address = Address.objects.get(user=request.user)
+        form = AddressModelForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('profile')
+        context = {
+            'header': 'Adres dostawy',
+            'form': form
+        }
+        return render(request, 'form.html', context)
+
+class EditAddressView(PermissionRequiredMixin, View):
+    permission_required = ['accounts.change_address']
+
+    def get(self, request, pk):
+        address = get_address(pk)
+        form = AddressModelForm(instance=address)
+        context = {
+            'header': 'Adres dostawy',
+            'form': form
+        }
+        return render(request, 'form.html', context)
+
+    def post(self, request, pk):
+        address = get_address(pk)
         form = AddressModelForm(request.POST, instance=address)
         if form.is_valid():
             form.save()
-            return redirect('main')
+            return redirect('profile')
         context = {
             'header': 'Adres dostawy',
             'form': form
@@ -74,13 +97,10 @@ class EditAddressView(PermissionRequiredMixin, View):
 class CustomerProfileView(LoginRequiredMixin, View):
 
     def get(self, request):
-        try:
-            address = Address.objects.get(user=request.user)
-        except Address.DoesNotExist:
-            raise Http404
+        addresses = Address.objects.filter(user=request.user).order_by('id')
         context = {
             'header': 'Informacje o koncie',
-            'address': address
+            'addresses': addresses
         }
         return render(request, 'user_profile.html', context)
 

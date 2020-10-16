@@ -3,7 +3,7 @@ from django.db import models
 
 
 class Address(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     city = models.CharField(max_length=100, null=True, default=None)
     street = models.CharField(max_length=100, null=True, default=None)
     building_number = models.CharField(max_length=5, null=True, default=None)

@@ -15,7 +15,7 @@ class AddressModelForm(forms.ModelForm):
 
     class Meta:
         model = Address
-        exclude = ['user']
+        fields = '__all__'
         labels = {
             'city': 'Miasto',
             'street': 'Nazwa ulicy',
@@ -23,3 +23,4 @@ class AddressModelForm(forms.ModelForm):
             'flat_number': 'Numer mieszkania',
             'postal_code': 'Kod pocztowy'
         }
+        widgets = {'user': forms.HiddenInput()}

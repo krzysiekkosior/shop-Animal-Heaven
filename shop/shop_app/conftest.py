@@ -32,11 +32,11 @@ def customer_perms():
     user = User.objects.create(username='user')
     user.set_password('user1')
     user.user_permissions.add(Permission.objects.get(codename='change_address'))
+    user.user_permissions.add(Permission.objects.get(codename='add_address'))
     user.user_permissions.add(Permission.objects.get(codename='change_shoppingcart'))
-    address = Address.objects.create(user=user)
     cart = ShoppingCart.objects.create(user=user)
     user.save()
-    return (user, address, cart)
+    return (user, cart)
 
 
 @pytest.fixture
