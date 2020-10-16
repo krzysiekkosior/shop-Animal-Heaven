@@ -18,7 +18,8 @@
                 <p  class="mr-auto p-2">Adres:<b> ul. {{ address.street }} {{ address.building_number }}
             {% if address.flat_number %} m. {{ address.flat_number }} {% endif %},
                  {{ address.city }} {{ address.postal_code }}</b></p>
-            <a href="/accounts/address/edit/{{ address.id }}/"><button type="button" class="btn btn-success btn-sm p-2">Edytuj adres</button></a>
+            <a href="/accounts/address/edit/{{ address.id }}/"><button type="button" class="btn btn-info btn-sm p-2">Edytuj adres</button></a>
+            <a href="/accounts/address/delete/{{ address.id }}/"><button type="button" class="btn btn-danger btn-sm p-2">Usuń adres</button></a>
             </li>
         {% empty %}
             <li class="list-group-item">

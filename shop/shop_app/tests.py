@@ -293,27 +293,3 @@ def test_delete_shipment_as_customer(client, shipment, customer_perms):
     client.login(username='user', password='user1')
     response = client.get(f'/shipment/delete/{shipment.id}/')
     assert response.status_code == 403
-
-
-@pytest.mark.django_db
-def test_profile_url_as_customer(client, customer_perms):
-    client.login(username='user', password='user1')
-    response = client.get(reverse_lazy('profile'))
-    assert response.status_code == 200
-
-
-@pytest.mark.django_db
-def test_edit_address_as_customer(client, customer_perms):
-    client.login(username='user', password='user1')
-    response = client.get(reverse_lazy('address'))
-    assert response.status_code == 200
-
-    context = {
-        'user': customer_perms,
-        'city': 'Warszawa',
-        'street': 'Prosta',
-        'building_number': '51',
-        'postal_code': '00-838'
-    }
-    client.post(reverse_lazy('address'), context)
-    assert Address.objects.first().street == 'Prosta'

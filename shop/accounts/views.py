@@ -27,6 +27,7 @@ class SignUpView(CreateView):
         response = super(SignUpView, self).form_valid(form)
         customer = self.object
         ShoppingCart.objects.create(user=customer)
+        customer.user_permissions.add(Permission.objects.get(codename='delete_address'))
         customer.user_permissions.add(Permission.objects.get(codename='change_address'))
         customer.user_permissions.add(Permission.objects.get(codename='add_address'))
         customer.user_permissions.add(Permission.objects.get(codename='change_shoppingcart'))
@@ -47,7 +48,7 @@ class CreateAdmin(SuperUserCheck, CreateView):
         return response
 
 
-class AddAddressView(PermissionRequiredMixin, View):
+class AddressAddView(PermissionRequiredMixin, View):
     permission_required = ['accounts.add_address']
 
     def get(self, request):
@@ -69,7 +70,8 @@ class AddAddressView(PermissionRequiredMixin, View):
         }
         return render(request, 'form.html', context)
 
-class EditAddressView(PermissionRequiredMixin, View):
+
+class AddressEditView(PermissionRequiredMixin, View):
     permission_required = ['accounts.change_address']
 
     def get(self, request, pk):
@@ -94,6 +96,25 @@ class EditAddressView(PermissionRequiredMixin, View):
         return render(request, 'form.html', context)
 
 
+class AddressDeleteView(PermissionRequiredMixin, View):
+    permission_required = ['accounts.delete_address']
+
+    def get(self, request, pk):
+        address = get_address(pk)
+        context = {
+            'header': 'Usuń adres',
+            'object': address
+        }
+        return render(request, 'delete_view.html', context)
+
+    def post(self, request, pk):
+        action = request.POST.get('action')
+        if action == 'delete':
+            address = get_address(pk)
+            address.delete()
+        return redirect('profile')
+
+
 class CustomerProfileView(LoginRequiredMixin, View):
 
     def get(self, request):
@@ -103,4 +124,3 @@ class CustomerProfileView(LoginRequiredMixin, View):
             'addresses': addresses
         }
         return render(request, 'user_profile.html', context)
-

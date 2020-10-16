@@ -23,6 +23,7 @@ urlpatterns = [
     path('createadmin/', views.CreateAdmin.as_view()),
 
     path('profile/', views.CustomerProfileView.as_view(), name='profile'),
-    path('address/edit/<int:pk>/', views.EditAddressView.as_view()),
-    path('address/add/', views.AddAddressView.as_view()),
+    path('address/edit/<int:pk>/', views.AddressEditView.as_view()),
+    path('address/delete/<int:pk>/', views.AddressDeleteView.as_view()),
+    path('address/add/', views.AddressAddView.as_view(), name='add_address'),
 ]
