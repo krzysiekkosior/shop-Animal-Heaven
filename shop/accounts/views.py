@@ -1,6 +1,5 @@
 from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
-from django.http import Http404
 from django.shortcuts import render, redirect
 from django.views import View
 from django.views.generic import CreateView
@@ -63,7 +62,7 @@ class AddressAddView(PermissionRequiredMixin, View):
         form = AddressModelForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('profile')
+            return redirect('cart')
         context = {
             'header': 'Adres dostawy',
             'form': form

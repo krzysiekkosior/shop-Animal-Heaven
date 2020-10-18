@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block header %}
+    {{ header }}
+{% endblock %}
+
+{% block content %}
+    <ul class="list-group">
+        {% for p in products %}
+            <li class="list-group-item">
+                <p><b>{{ p.product }} - {{ p.amount }} szt.</b></p>
+            </li>
+        {% endfor %}
+        <li class="list-group-item">
+            <p><b><i>Łącznie za produkty: {{ cart.get_total_cost }} zł</i></b></p>
+        </li>
+        <form method="post" action="/cart/summary/">
+        {% csrf_token %}
+        <li class="list-group-item">
+            <label for="id_shipment"><b>Sposób dostawy:</b></label>
+            <select name="shipment" required id="id_shipment">
+                {% for shipment in shipments %}
+            <option value="{{ shipment.id }}">{{ shipment }}</option>
+                {% endfor %}
+            </select>
+        </li>
+        <li class="list-group-item">
+            <label for="id_address"><b>Adres dostawy:</b></label>
+            <select name="address" required id="id_address">
+                {% for ad in addresses %}
+            <option value="{{ ad.id }}">ul. {{ ad.street }} {{ ad.building_number }}
+                    {% if ad.flat_number is not None %}
+                        {{ ad.flat_number }}</option>
+                    {% endif %} {{ ad.city }} {{ ad.postal_code }}
+                {% endfor %}
+            </select>
+        </li>
+        <li class="list-group-item">
+            <button type="submit" class="btn btn-success">Prześlij</button>
+        </li>
+        </form>
+    </ul>
+{% endblock %}

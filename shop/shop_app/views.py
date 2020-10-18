@@ -1,6 +1,8 @@
 from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
 from django.shortcuts import render, redirect
 from django.views import View
+
+from accounts.models import Address
 from shop_app.forms import CategoryModelForm, BrandModelForm, ProductModelForm, ShipmentModelForm
 from shop_app.models import Category, Product, Brand, Order, Shipment, ShoppingCart, Amount
 from shop_app.utils import get_category, get_brand, get_product, get_shipment
@@ -379,7 +381,8 @@ class ShipmentDeleteView(PermissionRequiredMixin, View):
         return redirect('shipment_list')
 
 
-class CartView(LoginRequiredMixin, View):
+class CartView(PermissionRequiredMixin, View):
+    permission_required = ['shop_app.change_shoppingcart']
 
     def get(self, request):
         cart = ShoppingCart.objects.get(user=request.user)
@@ -392,7 +395,8 @@ class CartView(LoginRequiredMixin, View):
         return render(request, 'shopping_cart.html', context)
 
 
-class RemoveProductFromCart(LoginRequiredMixin, View):
+class RemoveProductFromCart(PermissionRequiredMixin, View):
+    permission_required = ['shop_app.change_shoppingcart']
 
     def get(self, request, pk):
         cart = ShoppingCart.objects.get(user=request.user)
@@ -402,3 +406,47 @@ class RemoveProductFromCart(LoginRequiredMixin, View):
         product.save()
         products_in_cart.delete()
         return redirect('cart')
+
+
+class ShoppingAddShipmentView(PermissionRequiredMixin, View):
+    permission_required = ['shop_app.change_shoppingcart']
+
+    def get(self, request):
+        cart = ShoppingCart.objects.get(user=request.user)
+        products = Amount.objects.filter(shopping_cart=cart)
+        shipments = Shipment.objects.all()
+        addresses = Address.objects.filter(user=request.user)
+        if addresses.count() == 0:
+            return redirect('add_address')
+        context = {
+            'header': 'Wybierz sposób dostawy',
+            'cart': cart,
+            'products': products,
+            'shipments': shipments,
+            'addresses': addresses
+        }
+        return render(request, 'add_shipment_view.html', context)
+
+
+class ShoppingSummaryView(PermissionRequiredMixin, View):
+    permission_required = ['shop_app.change_shoppingcart']
+
+    def get(self, request):
+        return redirect('main')
+
+    def post(self, request):
+        cart = ShoppingCart.objects.get(user=request.user)
+        products = Amount.objects.filter(shopping_cart=cart)
+        shipment_id = request.POST.get('shipment')
+        address_id = request.POST.get('address')
+        shipment = Shipment.objects.get(id=shipment_id)
+        address = Address.objects.get(id=address_id)
+        total_cost = cart.get_total_cost() + shipment.price
+        context = {
+            'header': 'Podsumowanie',
+            'products': products,
+            'shipment': shipment,
+            'address': address,
+            'total_cost': total_cost
+        }
+        return render(request, 'shopping_summary_view.html', context)

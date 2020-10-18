@@ -20,6 +20,10 @@
         <li class="list-group-item">
             <p><b><i>ŁĄCZNIE DO ZAPŁATY: {{ cart.get_total_cost }} zł + koszt dostawy</i></b></p>
         </li>
+        <li class="list-group-item">
+            <a href="/cart/shipment/"><button type="button" class="btn btn-primary btn-sm p-2">Przejdź dalej</button></a><br><br>
+        <p><i>W przypadku brak adresu dostawy w ustawieniach profilu zostanie Pan / Pani przekierowana na stronę dodawania adresu.</i></p>
+        </li>
     {% endif %}
     </ul>
 {% endblock %}
