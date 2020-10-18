@@ -7,7 +7,7 @@
 {% block content %}
     {% if cart.is_cart_empty %}
         <p><i>pusty</i></p>
-    {% endif %}
+    {% else %}
     <ul class="list-group">
         {% for p in products %}
             <li class="list-group-item">
@@ -18,8 +18,8 @@
             </li>
         {% endfor %}
         <li class="list-group-item">
-            <p><b><i>ŁĄCZNIE DO ZAPŁATY: {{ cart.get_total_cost }} zł</i></b></p>
+            <p><b><i>ŁĄCZNIE DO ZAPŁATY: {{ cart.get_total_cost }} zł + koszt dostawy</i></b></p>
         </li>
-
+    {% endif %}
     </ul>
 {% endblock %}

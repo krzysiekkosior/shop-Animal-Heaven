@@ -1,7 +1,7 @@
 import pytest
 from django.contrib.auth.models import User, Permission
 from django.test import Client
-from shop_app.models import Category, Brand, Product, Shipment, ShoppingCart
+from shop_app.models import Category, Brand, Product, Shipment, ShoppingCart, Amount
 
 
 @pytest.fixture
@@ -27,15 +27,20 @@ def admin_perms():
 
 @pytest.fixture
 def customer_perms():
-    user = User.objects.create(username='user')
-    user.set_password('user1')
-    user.user_permissions.add(Permission.objects.get(codename='delete_address'))
-    user.user_permissions.add(Permission.objects.get(codename='change_address'))
-    user.user_permissions.add(Permission.objects.get(codename='add_address'))
-    user.user_permissions.add(Permission.objects.get(codename='change_shoppingcart'))
-    cart = ShoppingCart.objects.create(user=user)
-    user.save()
-    return (user, cart)
+    customer = User.objects.create(username='user')
+    customer.set_password('user1')
+    customer.user_permissions.add(Permission.objects.get(codename='delete_address'))
+    customer.user_permissions.add(Permission.objects.get(codename='change_address'))
+    customer.user_permissions.add(Permission.objects.get(codename='add_address'))
+    customer.user_permissions.add(Permission.objects.get(codename='change_shoppingcart'))
+    customer.save()
+    return customer
+
+
+@pytest.fixture
+def cart(customer_perms):
+    cart = ShoppingCart.objects.create(user=customer_perms)
+    return cart
 
 
 @pytest.fixture
@@ -57,3 +62,9 @@ def product(category, brand):
 def shipment():
     shipment = Shipment.objects.create(name='shipment1', price=9.99)
     return shipment
+
+
+@pytest.fixture
+def products_in_cart(product, cart, customer_perms):
+    products_in_cart = Amount.objects.create(amount=2, shopping_cart=cart, product=product)
+    return products_in_cart

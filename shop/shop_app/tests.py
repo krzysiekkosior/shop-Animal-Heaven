@@ -2,7 +2,7 @@ from django.urls import reverse_lazy
 import pytest
 
 from accounts.models import Address
-from shop_app.models import Category, Brand, Product, Shipment
+from shop_app.models import Category, Brand, Product, Shipment, Amount
 
 
 @pytest.mark.django_db
@@ -293,3 +293,31 @@ def test_delete_shipment_as_customer(client, shipment, customer_perms):
     client.login(username='user', password='user1')
     response = client.get(f'/shipment/delete/{shipment.id}/')
     assert response.status_code == 403
+
+
+@pytest.mark.django_db
+def test_shopping_cart_url_as_customer(client, customer_perms, cart):
+    client.login(username='user', password='user1')
+    response = client.get('/cart/')
+    assert response.status_code == 200
+
+
+@pytest.mark.django_db
+def test_add_product_to_cart_as_customer(client, product, cart, customer_perms):
+    client.login(username='user', password='user1')
+    response = client.get(f'/product/{product.id}/')
+    entry_products_quantity = product.quantity
+    assert response.status_code == 200
+
+    client.post(f'/product/{product.id}/', {'amount': 2})
+    assert cart.products.count() == 1
+    assert cart.products.all()[0].name == 'product1'
+    assert cart.products.all()[0].quantity == entry_products_quantity - 2
+
+
+@pytest.mark.django_db
+def test_remove_product_from_cart_as_customer(client, customer_perms, cart, products_in_cart):
+    client.login(username='user', password='user1')
+    response = client.get(f'/cart/delete/{products_in_cart.product.id}/')
+    assert response.status_code == 302
+    assert cart.products.count() == 0
