@@ -5,7 +5,7 @@ from django.views import View
 from accounts.models import Address
 from shop_app.forms import CategoryModelForm, BrandModelForm, ProductModelForm, ShipmentModelForm
 from shop_app.models import Category, Product, Brand, Order, Shipment, ShoppingCart, Amount
-from shop_app.utils import get_category, get_brand, get_product, get_shipment
+from shop_app.utils import get_category, get_brand, get_product, get_shipment, get_order
 
 
 class MainPageView(View):
@@ -415,38 +415,76 @@ class ShoppingAddShipmentView(PermissionRequiredMixin, View):
         cart = ShoppingCart.objects.get(user=request.user)
         products = Amount.objects.filter(shopping_cart=cart)
         shipments = Shipment.objects.all()
-        addresses = Address.objects.filter(user=request.user)
-        if addresses.count() == 0:
-            return redirect('add_address')
         context = {
             'header': 'Wybierz sposób dostawy',
             'cart': cart,
             'products': products,
             'shipments': shipments,
-            'addresses': addresses
         }
         return render(request, 'add_shipment_view.html', context)
 
+    def post(self, request):
+        cart = ShoppingCart.objects.get(user=request.user)
+        shipment_id = request.POST.get('shipment')
+        cart.shipment = get_shipment(shipment_id)
+        cart.save()
+        addresses = Address.objects.filter(user=request.user)
+        if addresses.count() == 0:
+            return redirect('add_address')
+        return redirect('create_order')
 
-class ShoppingSummaryView(PermissionRequiredMixin, View):
+
+class CreateOrderView(PermissionRequiredMixin, View):
     permission_required = ['shop_app.change_shoppingcart']
 
     def get(self, request):
-        return redirect('main')
+        cart = ShoppingCart.objects.get(user=request.user)
+        products = Amount.objects.filter(shopping_cart=cart)
+        addresses = Address.objects.filter(user=request.user)
+        total_cost = cart.get_total_cost() + cart.shipment.price
+        context = {
+            'header': 'Podsumowanie',
+            'products': products,
+            'shipment': cart.shipment,
+            'total_cost': total_cost,
+            'addresses': addresses
+        }
+        return render(request, 'create_order_view.html', context)
 
     def post(self, request):
         cart = ShoppingCart.objects.get(user=request.user)
         products = Amount.objects.filter(shopping_cart=cart)
-        shipment_id = request.POST.get('shipment')
         address_id = request.POST.get('address')
-        shipment = Shipment.objects.get(id=shipment_id)
         address = Address.objects.get(id=address_id)
-        total_cost = cart.get_total_cost() + shipment.price
+        total_cost = cart.get_total_cost() + cart.shipment.price
+        order = Order()
+        order.number = Order.set_number()
+        order.details = Order.set_details(products, total_cost, cart.shipment)
+        order.user = request.user
+        order.address = address
+        order.save()
+        cart.products.clear()
+        cart.shipment = None
+        cart.save()
+        return redirect('orders')
+
+
+class CustomerOrdersListView(LoginRequiredMixin, View):
+
+    def get(self, request):
+        orders = Order.objects.filter(user=request.user)
         context = {
-            'header': 'Podsumowanie',
-            'products': products,
-            'shipment': shipment,
-            'address': address,
-            'total_cost': total_cost
+            'header': 'Twoje zamówienia',
+            'orders': orders
         }
-        return render(request, 'shopping_summary_view.html', context)
+        return render(request, 'orders_list.html', context)
+
+class OrderDetailsView(LoginRequiredMixin, View):
+
+    def get(self, request, pk):
+        order = get_order(pk)
+        context = {
+            'header': f'Zamówienie nr: {order.number}',
+            'order': order
+        }
+        return render(request, 'order_details.html', context)

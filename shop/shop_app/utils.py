@@ -1,5 +1,5 @@
 from django.http import Http404
-from shop_app.models import Category, Brand, Product, Shipment
+from shop_app.models import Category, Brand, Product, Shipment, Order
 
 
 def get_category(pk):
@@ -26,4 +26,10 @@ def get_shipment(pk):
     try:
         return Shipment.objects.get(pk=pk)
     except Shipment.DoesNotExist:
+        raise Http404
+
+def get_order(pk):
+    try:
+        return Order.objects.get(pk=pk)
+    except Order.DoesNotExist:
         raise Http404

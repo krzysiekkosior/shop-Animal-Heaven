@@ -3,6 +3,8 @@ from random import randint
 from django.contrib.auth.models import User
 from django.db import models
 
+from accounts.models import Address
+
 
 class Category(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -55,9 +57,28 @@ class Order(models.Model):
     ]
     status = models.IntegerField(choices=STATUS, default=0)
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    address = models.ForeignKey(Address, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
         return f'{self.number} - {self.user}'
+
+    @staticmethod
+    def set_number():
+        orders = Order.objects.all()
+        numbers = [order.number for order in orders]
+        while True:
+            number = randint(1000000, 1999999)
+            if number not in numbers:
+                return number
+
+    @staticmethod
+    def set_details(products, total_cost, shipment):
+        details = ''
+        for p in products:
+            details += f'<p>{p.product} - {p.amount} szt. </p>'
+        details += f'<p>Sposób dostawy: {shipment.name}</p><p>Kwota zamówienia: {total_cost} zł</p>'
+        return details
+
 
 
 class ShoppingCart(models.Model):

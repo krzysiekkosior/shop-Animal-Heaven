@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block header %}
+    {{ header }}
+{% endblock %}
+
+{% block content %}
+    <ul class="list-group">
+        <li class="list-group-item">
+            <p><b>Zleceniodawca</b>: {{ order.user.username }}</p>
+            <p><b>Data utworzenia</b>: {{ order.creation_date }}</p>
+            {% autoescape off %}
+            <div><b>Szczegóły</b>: {{ order.details }}</div>
+            {% endautoescape %}
+            <p><b>Adres</b>: ul. {{ order.address.street }} {{ order.address.building_number }}
+                    {% if order.address.flat_number is not None %}{{ order.address.flat_number }}{% endif %}
+                {{ order.address.city }} {{ order.address.postal_code }}</p>
+            <p><b>Status zamówienia</b>: {{ order.get_status_display }}</p>
+
+        </li>
+    </ul>
+{% endblock %}

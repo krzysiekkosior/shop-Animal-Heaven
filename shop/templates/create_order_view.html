@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block header %}
+    {{ header }}
+{% endblock %}
+
+{% block content %}
+    <ul class="list-group">
+        {% for p in products %}
+            <li class="list-group-item">
+                <p><b>{{ p.product }} - {{ p.amount }} szt.</b></p>
+            </li>
+        {% endfor %}
+        <li class="list-group-item">
+                <p><b>Sposób dostawy: </b>{{ shipment.name }}</p>
+        </li>
+        <li class="list-group-item">
+                <p class="lead"><b>Łącznie do zapłaty: </b>{{ total_cost }} zł</p>
+        </li>
+        <form method="post">
+        {% csrf_token %}
+        <li class="list-group-item">
+            <label for="id_address"><b>Adres dostawy:</b></label>
+            <select name="address" required id="id_address">
+                {% for ad in addresses %}
+            <option value="{{ ad.id }}">ul. {{ ad.street }} {{ ad.building_number }}
+                    {% if ad.flat_number is not None %}
+                        {{ ad.flat_number }}</option>
+                    {% endif %} {{ ad.city }} {{ ad.postal_code }}
+                {% endfor %}
+            </select>
+        </li>
+        <li class="list-group-item">
+            <button type="submit" class="btn btn-success">Potwierdzam i zamawiam</button>
+        </li>
+        </form>
+        <li class="list-group-item">
+            <a href="/cart/"><button type="submit" class="btn btn-secondary btn-sm">Powrót do koszyka</button></a>
+            <a href="/cart/shipment/"><button type="submit" class="btn btn-secondary btn-sm">Powrót do wyboru sposobu dostawy</button></a>
+        </li>
+    </ul>
+{% endblock %}

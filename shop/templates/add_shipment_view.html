@@ -14,7 +14,7 @@
         <li class="list-group-item">
             <p><b><i>Łącznie za produkty: {{ cart.get_total_cost }} zł</i></b></p>
         </li>
-        <form method="post" action="/cart/summary/">
+        <form method="post">
         {% csrf_token %}
         <li class="list-group-item">
             <label for="id_shipment"><b>Sposób dostawy:</b></label>
@@ -25,19 +25,11 @@
             </select>
         </li>
         <li class="list-group-item">
-            <label for="id_address"><b>Adres dostawy:</b></label>
-            <select name="address" required id="id_address">
-                {% for ad in addresses %}
-            <option value="{{ ad.id }}">ul. {{ ad.street }} {{ ad.building_number }}
-                    {% if ad.flat_number is not None %}
-                        {{ ad.flat_number }}</option>
-                    {% endif %} {{ ad.city }} {{ ad.postal_code }}
-                {% endfor %}
-            </select>
-        </li>
-        <li class="list-group-item">
-            <button type="submit" class="btn btn-success">Prześlij</button>
+            <button type="submit" class="btn btn-success">Dalej</button>
         </li>
         </form>
+        <li class="list-group-item">
+        <p><i>W przypadku brak adresu dostawy w ustawieniach profilu zostanie Pan / Pani przekierowana na stronę dodawania adresu.</i></p>
+        </li>
     </ul>
 {% endblock %}

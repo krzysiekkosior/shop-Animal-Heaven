@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block header %}
+    {{ header }}
+    {% if perms.shop_app.add_product %}
+        <a href="/product/add/"><button type="button" class="btn btn-success btn-sm">Dodaj</button></a>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <ul class="list-group">
+        {% for order in orders %}
+            <li class="list-group-item d-flex">
+                <a href="/order/{{ order.id }}/" class="mr-auto p-2">
+                    Zamówienie nr: {{ order.number }} ({{ order.creation_date }} r.) - <i>{{ order.get_status_display }}</i>
+                </a>
+            </li>
+            {% empty %}
+            <li class="list-group-item d-flex">
+                <p><i>Brak zamówień</i></p>
+            </li>
+        {% endfor %}
+    </ul>
+    <br>
+
+{% endblock %}

@@ -6,7 +6,9 @@
 
 {% block content %}
     {% if cart.is_cart_empty %}
+        <li class="list-group-item">
         <p><i>pusty</i></p>
+        </li>
     {% else %}
     <ul class="list-group">
         {% for p in products %}
@@ -22,7 +24,6 @@
         </li>
         <li class="list-group-item">
             <a href="/cart/shipment/"><button type="button" class="btn btn-primary btn-sm p-2">Przejdź dalej</button></a><br><br>
-        <p><i>W przypadku brak adresu dostawy w ustawieniach profilu zostanie Pan / Pani przekierowana na stronę dodawania adresu.</i></p>
         </li>
     {% endif %}
     </ul>
