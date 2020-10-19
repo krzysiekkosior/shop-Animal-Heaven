@@ -480,6 +480,7 @@ class CustomerOrdersListView(LoginRequiredMixin, View):
         }
         return render(request, 'orders_list.html', context)
 
+
 class OrderDetailsView(LoginRequiredMixin, View):
 
     def get(self, request, pk):
@@ -503,3 +504,15 @@ class OrderDetailsView(LoginRequiredMixin, View):
             'form': form
         }
         return render(request, 'order_details.html', context)
+
+
+class AllOrdersListView(PermissionRequiredMixin, View):
+    permission_required = ['shop_app.view_order']
+
+    def get(self, request):
+        orders = Order.objects.all()
+        context = {
+            'header': 'Wszystkie zamówienia',
+            'orders': orders
+        }
+        return render(request, 'orders_list.html', context)

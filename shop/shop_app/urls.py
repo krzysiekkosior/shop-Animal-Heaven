@@ -48,6 +48,7 @@ urlpatterns = [
     path('cart/order/', views.CreateOrderView.as_view(), name='create_order'),
 
     path('orders/', views.CustomerOrdersListView.as_view(), name='orders'),
+    path('all_orders/', views.AllOrdersListView.as_view(), name='all_orders'),
     path('order/<int:pk>/', views.OrderDetailsView.as_view()),
 
 ]

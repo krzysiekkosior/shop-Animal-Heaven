@@ -351,11 +351,13 @@ def test_customers_orders_list_url(client, customer_perms):
     response = client.get('/orders/')
     assert response.status_code == 200
 
+
 @pytest.mark.django_db
 def test_order_details_url(client, customer_perms, order):
     client.login(username='user', password='user1')
     response = client.get(f'/order/{order.pk}/')
     assert response.status_code == 200
+
 
 @pytest.mark.django_db
 def test_order_status_change(client, admin_perms, order):
@@ -365,3 +367,17 @@ def test_order_status_change(client, admin_perms, order):
     client.post(f'/order/{order.pk}/', {'status': 1})
     order.refresh_from_db()
     assert order.status == 1
+
+
+@pytest.mark.django_db
+def test_all_orders_list_url_as_customer(client, admin_perms, order):
+    client.login(username='admin', password='admin1')
+    response = client.get(f'/all_orders/')
+    assert response.status_code == 200
+
+
+@pytest.mark.django_db
+def test_all_orders_list_url_as_customer(client, customer_perms, order):
+    client.login(username='user', password='user1')
+    response = client.get(f'/all_orders/')
+    assert response.status_code == 403

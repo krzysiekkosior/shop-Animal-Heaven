@@ -2,9 +2,6 @@
 
 {% block header %}
     {{ header }}
-    {% if perms.shop_app.add_product %}
-        <a href="/product/add/"><button type="button" class="btn btn-success btn-sm">Dodaj</button></a>
-    {% endif %}
 {% endblock %}
 
 {% block content %}
