@@ -1,6 +1,6 @@
 from django import forms
 from django.core.exceptions import NON_FIELD_ERRORS
-from .models import Category, Brand, Product, Shipment
+from .models import Category, Brand, Product, Shipment, Order
 
 
 class CategoryModelForm(forms.ModelForm):
@@ -63,4 +63,12 @@ class ShipmentModelForm(forms.ModelForm):
             'name': {
                 'unique': ("Sposób dostawy o podanej nazwie już istnieje."),
             },
+        }
+
+class OrderStatusChangeModelForm(forms.ModelForm):
+    class Meta:
+        model = Order
+        fields = ('status', )
+        labels = {
+            'status': 'Zmień status',
         }

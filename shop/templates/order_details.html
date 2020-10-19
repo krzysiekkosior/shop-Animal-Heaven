@@ -10,13 +10,21 @@
             <p><b>Zleceniodawca</b>: {{ order.user.username }}</p>
             <p><b>Data utworzenia</b>: {{ order.creation_date }}</p>
             {% autoescape off %}
-            <div><b>Szczegóły</b>: {{ order.details }}</div>
+            <section><b>Szczegóły</b>: {{ order.details }}</section>
             {% endautoescape %}
-            <p><b>Adres</b>: ul. {{ order.address.street }} {{ order.address.building_number }}
+            <p><b>Adres dostawy</b>: ul. {{ order.address.street }} {{ order.address.building_number }}
                     {% if order.address.flat_number is not None %}{{ order.address.flat_number }}{% endif %}
                 {{ order.address.city }} {{ order.address.postal_code }}</p>
             <p><b>Status zamówienia</b>: {{ order.get_status_display }}</p>
-
         </li>
+        {% if perms.shop_app.change_order%}
+            <li class="list-group-item">
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+            <button type="submit" class="btn btn-success btn-sm">Prześlij</button>
+            </form>
+            </li>
+        {% endif %}
     </ul>
 {% endblock %}

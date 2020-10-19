@@ -356,3 +356,12 @@ def test_order_details_url(client, customer_perms, order):
     client.login(username='user', password='user1')
     response = client.get(f'/order/{order.pk}/')
     assert response.status_code == 200
+
+@pytest.mark.django_db
+def test_order_status_change(client, admin_perms, order):
+    client.login(username='admin', password='admin1')
+    response = client.get(f'/order/{order.pk}/')
+    assert response.status_code == 200
+    client.post(f'/order/{order.pk}/', {'status': 1})
+    order.refresh_from_db()
+    assert order.status == 1

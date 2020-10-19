@@ -3,7 +3,8 @@ from django.shortcuts import render, redirect
 from django.views import View
 
 from accounts.models import Address
-from shop_app.forms import CategoryModelForm, BrandModelForm, ProductModelForm, ShipmentModelForm
+from shop_app.forms import CategoryModelForm, BrandModelForm, ProductModelForm, ShipmentModelForm, \
+    OrderStatusChangeModelForm
 from shop_app.models import Category, Product, Brand, Order, Shipment, ShoppingCart, Amount
 from shop_app.utils import get_category, get_brand, get_product, get_shipment, get_order
 
@@ -483,8 +484,22 @@ class OrderDetailsView(LoginRequiredMixin, View):
 
     def get(self, request, pk):
         order = get_order(pk)
+        form = OrderStatusChangeModelForm()
         context = {
             'header': f'Zamówienie nr: {order.number}',
-            'order': order
+            'order': order,
+            'form': form
+        }
+        return render(request, 'order_details.html', context)
+
+    def post(self, request, pk):
+        order = get_order(pk)
+        form = OrderStatusChangeModelForm(request.POST, instance=order)
+        if form.is_valid():
+            form.save()
+        context = {
+            'header': f'Zamówienie nr: {order.number}',
+            'order': order,
+            'form': form
         }
         return render(request, 'order_details.html', context)
