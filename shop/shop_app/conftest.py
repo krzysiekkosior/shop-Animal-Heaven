@@ -1,7 +1,9 @@
 import pytest
 from django.contrib.auth.models import User, Permission
 from django.test import Client
-from shop_app.models import Category, Brand, Product, Shipment, ShoppingCart, Amount
+
+from accounts.models import Address
+from shop_app.models import Category, Brand, Product, Shipment, ShoppingCart, Amount, Order
 
 
 @pytest.fixture
@@ -65,6 +67,35 @@ def shipment():
 
 
 @pytest.fixture
+def cart_with_shipment(customer_perms, shipment):
+    cart = ShoppingCart.objects.create(user=customer_perms, shipment=shipment)
+    return cart
+
+
+@pytest.fixture
 def products_in_cart(product, cart, customer_perms):
     products_in_cart = Amount.objects.create(amount=2, shopping_cart=cart, product=product)
     return products_in_cart
+
+
+@pytest.fixture
+def address(customer_perms):
+    address = Address.objects.create(
+        user=customer_perms,
+        city='testcity1',
+        street='teststreet1',
+        building_number='1A',
+        flat_number=1,
+        postal_code='01-234'
+    )
+    return address
+
+@pytest.fixture
+def order(customer_perms, address):
+    order = Order.objects.create(
+        number=123456,
+        details='details',
+        user=customer_perms,
+        address=address
+    )
+    return order

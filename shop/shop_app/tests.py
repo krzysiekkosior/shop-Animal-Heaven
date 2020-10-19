@@ -2,7 +2,7 @@ from django.urls import reverse_lazy
 import pytest
 
 from accounts.models import Address
-from shop_app.models import Category, Brand, Product, Shipment, Amount
+from shop_app.models import Category, Brand, Product, Shipment, Amount, ShoppingCart
 
 
 @pytest.mark.django_db
@@ -321,3 +321,38 @@ def test_remove_product_from_cart_as_customer(client, customer_perms, cart, prod
     response = client.get(f'/cart/delete/{products_in_cart.product.id}/')
     assert response.status_code == 302
     assert cart.products.count() == 0
+
+
+@pytest.mark.django_db
+def test_add_shipment_to_cart_as_customer(client, customer_perms, cart, address, shipment, products_in_cart):
+    client.login(username='user', password='user1')
+    response = client.get('/cart/shipment/')
+    assert response.status_code == 200
+    response = client.post('/cart/shipment/', {'shipment': shipment.pk})
+    assert response.status_code == 302
+    cart.refresh_from_db()
+    assert cart.shipment.name == shipment.name
+
+
+@pytest.mark.django_db
+def test_add_address_to_order_as_customer(client, customer_perms, cart_with_shipment, address):
+    client.login(username='user', password='user1')
+    response = client.get('/cart/order/')
+    assert response.status_code == 200
+    response = client.post('/cart/order/', {'address': address.pk})
+    assert response.status_code == 302
+    cart_with_shipment.refresh_from_db()
+    assert cart_with_shipment.shipment == None
+
+
+@pytest.mark.django_db
+def test_customers_orders_list_url(client, customer_perms):
+    client.login(username='user', password='user1')
+    response = client.get('/orders/')
+    assert response.status_code == 200
+
+@pytest.mark.django_db
+def test_order_details_url(client, customer_perms, order):
+    client.login(username='user', password='user1')
+    response = client.get(f'/order/{order.pk}/')
+    assert response.status_code == 200

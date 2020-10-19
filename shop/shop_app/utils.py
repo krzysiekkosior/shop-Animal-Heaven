@@ -22,11 +22,13 @@ def get_product(pk):
     except Product.DoesNotExist:
         raise Http404
 
+
 def get_shipment(pk):
     try:
         return Shipment.objects.get(pk=pk)
     except Shipment.DoesNotExist:
         raise Http404
+
 
 def get_order(pk):
     try:
