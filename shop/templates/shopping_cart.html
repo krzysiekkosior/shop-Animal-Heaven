@@ -23,7 +23,8 @@
             <p><b><i>ŁĄCZNIE DO ZAPŁATY: {{ cart.get_total_cost }} zł + koszt dostawy</i></b></p>
         </li>
         <li class="list-group-item">
-            <a href="/cart/shipment/"><button type="button" class="btn btn-primary btn-sm p-2">Przejdź dalej</button></a><br><br>
+            <a href="/cart/shipment/"><button type="button" class="btn btn-primary btn-sm p-2 d-inline">Dostawa i płatność</button></a>
+            <a href="/products/"><button type="button" class="btn btn-success btn-sm p-2 d-inline">Kontynuuj zakupy</button></a>
         </li>
     {% endif %}
     </ul>

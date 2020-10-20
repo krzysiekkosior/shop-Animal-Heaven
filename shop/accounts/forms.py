@@ -11,7 +11,7 @@ def validate_postal_code(value):
 
 
 class AddressModelForm(forms.ModelForm):
-    postal_code = forms.CharField(validators=[validate_postal_code])
+    postal_code = forms.CharField(validators=[validate_postal_code], label='Kod pocztowy')
 
     class Meta:
         model = Address
@@ -21,6 +21,5 @@ class AddressModelForm(forms.ModelForm):
             'street': 'Nazwa ulicy',
             'building_number': 'Numer budynku',
             'flat_number': 'Numer mieszkania',
-            'postal_code': 'Kod pocztowy'
         }
         widgets = {'user': forms.HiddenInput()}
