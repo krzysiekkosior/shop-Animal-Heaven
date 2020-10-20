@@ -72,7 +72,7 @@
                     Nasze marki
                 </a>
               </li>
-            {% if perms.accounts.change_address and perms.shop_app.change_shoppingcart %}
+            {% if perms.accounts.change_address and perms.shop_app.change_shoppingcart and not user.is_superuser %}
               <li class="nav-item">
                       <p class="nav-link"></p>
               </li>
