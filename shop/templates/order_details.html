@@ -15,6 +15,10 @@
             <p><b>Adres dostawy</b>: ul. {{ order.address.street }} {{ order.address.building_number }}
                     {% if order.address.flat_number is not None %}{{ order.address.flat_number }}{% endif %}
                 {{ order.address.city }} {{ order.address.postal_code }}</p>
+            <p><b>Sposób płatności</b>: {{ order.get_payment_display }}</p>
+            {% if order.payment == 1 %}
+                <p><a href="/bank_info/">Dane do przelewu</a></p>
+            {% endif %}
             <p><b>Status zamówienia</b>: {{ order.get_status_display }}</p>
         </li>
         {% if perms.shop_app.change_order%}

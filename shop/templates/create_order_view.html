@@ -20,6 +20,13 @@
         <form method="post">
         {% csrf_token %}
         <li class="list-group-item">
+            <label for="payment"><b>Sposób płatności:</b></label>
+            <select name="payment" required id="payment">
+            <option value="0">Przy odbiorze</option>
+            <option value="1">Online</option>
+            </select>
+        </li>
+        <li class="list-group-item">
             <label for="id_address"><b>Adres dostawy:</b></label>
             <select name="address" required id="id_address">
                 {% for ad in addresses %}

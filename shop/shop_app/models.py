@@ -56,6 +56,11 @@ class Order(models.Model):
         (1, "zakończone"),
     ]
     status = models.IntegerField(choices=STATUS, default=0)
+    PAYMENTS = [
+        (0, "przy odbiorze"),
+        (1, "online"),
+    ]
+    payment = models.IntegerField(choices=PAYMENTS, null=True, default=0)
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     address = models.ForeignKey(Address, on_delete=models.SET_NULL, null=True)
 

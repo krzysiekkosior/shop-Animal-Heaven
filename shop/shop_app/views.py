@@ -456,14 +456,18 @@ class CreateOrderView(PermissionRequiredMixin, View):
         cart = ShoppingCart.objects.get(user=request.user)
         products = Amount.objects.filter(shopping_cart=cart)
         address_id = request.POST.get('address')
+        payment = request.POST.get('payment')
         address = Address.objects.get(id=address_id)
         total_cost = cart.get_total_cost() + cart.shipment.price
+
         order = Order()
         order.number = Order.set_number()
         order.details = Order.set_details(products, total_cost, cart.shipment)
         order.user = request.user
         order.address = address
+        order.payment = int(payment)
         order.save()
+
         cart.products.clear()
         cart.shipment = None
         cart.save()
@@ -516,3 +520,10 @@ class AllOrdersListView(PermissionRequiredMixin, View):
             'orders': orders
         }
         return render(request, 'orders_list.html', context)
+
+
+class BankInfoView(LoginRequiredMixin, View):
+
+    def get(self, request):
+        context = {'header': 'Dane do przelewu'}
+        return render(request, 'bank_info.html', context)

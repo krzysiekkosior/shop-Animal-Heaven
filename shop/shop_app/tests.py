@@ -335,11 +335,11 @@ def test_add_shipment_to_cart_as_customer(client, customer_perms, cart, address,
 
 
 @pytest.mark.django_db
-def test_add_address_to_order_as_customer(client, customer_perms, cart_with_shipment, address):
+def test_add_address_and_payment_type_to_order_as_customer(client, customer_perms, cart_with_shipment, address):
     client.login(username='user', password='user1')
     response = client.get('/cart/order/')
     assert response.status_code == 200
-    response = client.post('/cart/order/', {'address': address.pk})
+    response = client.post('/cart/order/', {'address': address.pk, 'payment': 0})
     assert response.status_code == 302
     cart_with_shipment.refresh_from_db()
     assert cart_with_shipment.shipment == None
@@ -370,14 +370,21 @@ def test_order_status_change(client, admin_perms, order):
 
 
 @pytest.mark.django_db
-def test_all_orders_list_url_as_customer(client, admin_perms, order):
+def test_all_orders_list_url_as_admin(client, admin_perms, order):
     client.login(username='admin', password='admin1')
-    response = client.get(f'/all_orders/')
+    response = client.get('/all_orders/')
     assert response.status_code == 200
 
 
 @pytest.mark.django_db
 def test_all_orders_list_url_as_customer(client, customer_perms, order):
     client.login(username='user', password='user1')
-    response = client.get(f'/all_orders/')
+    response = client.get('/all_orders/')
     assert response.status_code == 403
+
+
+@pytest.mark.django_db
+def test_bank_info_url(client, customer_perms):
+    client.login(username='user', password='user1')
+    response = client.get(f'/bank_info/')
+    assert response.status_code == 200
