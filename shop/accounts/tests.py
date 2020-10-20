@@ -1,5 +1,4 @@
 import pytest
-from django.test import TestCase
 from django.urls import reverse_lazy
 
 from accounts.models import Address

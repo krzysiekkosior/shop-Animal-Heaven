@@ -90,6 +90,7 @@ def address(customer_perms):
     )
     return address
 
+
 @pytest.fixture
 def order(customer_perms, address):
     order = Order.objects.create(

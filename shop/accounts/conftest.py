@@ -1,9 +1,7 @@
 import pytest
 from django.contrib.auth.models import Permission, User
 from django.test import Client
-
 from accounts.models import Address
-from shop_app.models import ShoppingCart
 
 
 @pytest.fixture
@@ -21,9 +19,9 @@ def customer_perms():
     user.save()
     return user
 
+
 @pytest.fixture
 def address(customer_perms):
-
     address = Address.objects.create(
         user=customer_perms,
         city='testcity1',

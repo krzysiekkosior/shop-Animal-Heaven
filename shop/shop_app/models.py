@@ -85,7 +85,6 @@ class Order(models.Model):
         return details
 
 
-
 class ShoppingCart(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     products = models.ManyToManyField(Product, through='Amount')

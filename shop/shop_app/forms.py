@@ -65,10 +65,11 @@ class ShipmentModelForm(forms.ModelForm):
             },
         }
 
+
 class OrderStatusChangeModelForm(forms.ModelForm):
     class Meta:
         model = Order
-        fields = ('status', )
+        fields = ('status',)
         labels = {
             'status': 'Zmień status',
         }
