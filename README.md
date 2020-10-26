@@ -11,7 +11,7 @@ that is the same as Admin View, but can also allows to add Admins manually.
 ---
 
 # Instructions:
-1. Go to [Animal Heaven](animalheaven.herokuapp.com) to test application. Create customer account and
+1. Go to [Animal Heaven](https://animalheaven.herokuapp.com/) to test application. Create customer account and
 buy some stuff for your pet :)
 2. You can also log in as admin:
     
