@@ -20,7 +20,7 @@
             </p>
         </li>
         <li class="list-group-item">
-        {% if user.is_authenticated and product.quantity > 0 %}
+        {% if perms.shop.change_shoppingcart and product.quantity > 0 %}
               <form method="post">
                 {% csrf_token %}
                 Liczba sztuk: <input type="number" name="amount" max="{{ product.quantity }}">
